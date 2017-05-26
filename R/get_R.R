@@ -9,6 +9,17 @@
 #' @export
 #'
 #' @rdname get_R
+#'
+#' @examples
+#'
+#' if (require(incidence)) {
+#'  x <- incidence(c(1, 5, 5, 12, 45, 65))
+#'  plot(x)
+#'  res <- get_R(x)
+#'  res
+#'  plot(res)
+#' }
+#'
 
 get_R <- function(x, ...) {
   UseMethod("get_R")
@@ -48,9 +59,10 @@ get_R.default <- function(x, ...) {
 #'
 #' @param max_R The maximum value the reproduction number can take.
 
-get_R.integer <- function(x, disease = "Ebola", si_mean = NULL, si_sd = NULL,
-                          max_R = 5) {
+get_R.integer <- function(x, disease = "ebola", si_mean = NULL, si_sd = NULL,
+                          max_R = 5, days = 30) {
   dates <- seq_along(x)
+  last_day <- max(dates) + days
 
   disease <- tolower(disease)
   disease <- match.arg(disease)
@@ -67,7 +79,6 @@ get_R.integer <- function(x, disease = "Ebola", si_mean = NULL, si_sd = NULL,
   if (is.null(si_mean)) stop("si_mean is missing")
   if (is.null(si_sd)) stop("si_sd is missing")
 
-
   si_param <- epitrix::gamma_mucv2shapescale(si_mean, si_sd / si_mean)
 
   MAX_T <- 1000
@@ -77,33 +88,47 @@ get_R.integer <- function(x, disease = "Ebola", si_mean = NULL, si_sd = NULL,
   si[1] <- 0
   si <- si / sum(si)
 
+  days <- rep(0, last_day)
+  days[dates] <- x
+  all_lambdas <- EpiEstim::OverallInfectivity(days, si)
+  x_lambdas <- all_lambdas[dates[-1]]
 
-  all_lambdas <- EpiEstim::OverallInfectivity(x, si)
 
   loglike <- function(R) {
     if (R <= 0 ) return(-Inf)
-    x_lambdas <- all_lambdas[dates]
-
-    sum(dpois(x, lambda = R * x_lambdas, log = TRUE))
+    sum(stats::dpois(x[-1], lambda = R * x_lambdas, log = TRUE))
   }
 
   like <- function(R) exp(loglike(R))
 
-  GRID_SIZE <- 10000
+  GRID_SIZE <- 1000
 
-  R_grid <- seq(0, 5, lenght.out = GRID_SIZE)
+  R_grid <- seq(0, max_R, length.out = GRID_SIZE)
   R_like <- vapply(R_grid, like, numeric(1))
   R_ml <- R_grid[which.max(R_like)]
 
 
   out <- list(incidence = x,
-              dates = dates,
               R_grid = R_grid,
               R_like = R_like,
-              R_ml = R_ml)
-  class <- c("list", "earlyR")
+              R_ml = R_ml,
+              dates = seq(from = 2, to = last_day, by = 1),
+              infectiousness = all_lambdas[-1])
+  class(out) <- c("earlyR", "list")
 
   return(out)
+}
+
+
+
+
+
+
+#' @export
+#' @rdname get_R
+
+get_R.numeric <- function(x, ...) {
+  get_R(as.integer(x), ...)
 }
 
 
@@ -129,7 +154,7 @@ get_R.incidence <- function(x, ...) {
   }
 
   df <- as.data.frame(x)
-  out <- get_R(as.integer(x$counts))
+  out <- get_R(as.integer(x$counts), ...)
   out$dates <- x$dates
 
   return(out)
