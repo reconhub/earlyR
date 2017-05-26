@@ -113,6 +113,7 @@ get_R.integer <- function(x, disease = "Ebola", si_mean = NULL, si_sd = NULL,
 
 #' @export
 #' @rdname get_R
+
 get_R.incidence <- function(x, ...) {
 
   if (as.integer(x$interval) != 1L) {
