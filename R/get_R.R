@@ -88,11 +88,11 @@ get_R.integer <- function(x, disease = "ebola", si_mean = NULL, si_sd = NULL,
   si[1] <- 0
   si <- si / sum(si)
 
-  days <- rep(0, last_day)
-  days[dates] <- x
-  all_lambdas <- EpiEstim::OverallInfectivity(days, si)
-  x_lambdas <- all_lambdas[dates[-1]]
-
+  x_with_tail <- rep(0, last_day)
+  x_with_tail[dates] <- x
+  all_lambdas <- EpiEstim::OverallInfectivity(x_with_tail, si)[-1]
+  dates_lambdas <- seq_along(all_lambdas) + 1
+  x_lambdas <- all_lambdas[dates]
 
   loglike <- function(R) {
     if (R <= 0 ) return(-Inf)
@@ -112,8 +112,8 @@ get_R.integer <- function(x, disease = "ebola", si_mean = NULL, si_sd = NULL,
               R_grid = R_grid,
               R_like = R_like,
               R_ml = R_ml,
-              dates = seq(from = 2, to = last_day, by = 1),
-              infectiousness = all_lambdas[-1])
+              dates = dates_lambdas,
+              lambda = all_lambdas)
   class(out) <- c("earlyR", "list")
 
   return(out)
@@ -154,8 +154,12 @@ get_R.incidence <- function(x, ...) {
   }
 
   df <- as.data.frame(x)
+
   out <- get_R(as.integer(x$counts), ...)
-  out$dates <- x$dates
+
+  ## if (inherits(x$dates, "Date")) {
+  ##   out$dates <- min(x$dates) + out$dates
+  ## }
 
   return(out)
 }

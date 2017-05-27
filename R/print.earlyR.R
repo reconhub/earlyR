@@ -20,13 +20,13 @@ print.earlyR <- function(x, ...){
     print(x$R_ml)
     cat("\n")
 
-    cat("\n // $infectiousness:\n")
-    cat(" ", head(x$infectiousness))
-    if (length(x$infectiousness)>6L) cat("...")
+    cat("\n // $lambda:\n")
+    cat(" ", head(x$lambda))
+    if (length(x$lambda)>6L) cat("...")
     cat("\n")
 
     cat("\n // $dates:\n")
-    cat(" ", head(x$dates))
+    print(head(x$dates))
     if (length(x$dates)>6L) cat("...")
     cat("\n")
 }
