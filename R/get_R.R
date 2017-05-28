@@ -113,7 +113,7 @@ get_R.integer <- function(x, disease = "ebola", si_mean = NULL, si_sd = NULL,
               R_like = R_like,
               R_ml = R_ml,
               dates = dates_lambdas,
-              lambda = all_lambdas)
+              lambdas = all_lambdas)
   class(out) <- c("earlyR", "list")
 
   return(out)
@@ -157,9 +157,9 @@ get_R.incidence <- function(x, ...) {
 
   out <- get_R(as.integer(x$counts), ...)
 
-  ## if (inherits(x$dates, "Date")) {
-  ##   out$dates <- min(x$dates) + out$dates
-  ## }
+  if (inherits(x$dates, "Date")) {
+    out$dates <- min(x$dates) - 1 + out$dates
+  }
 
   return(out)
 }
