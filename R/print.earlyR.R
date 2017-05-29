@@ -29,4 +29,8 @@ print.earlyR <- function(x, ...){
     print(utils::head(x$dates))
     if (length(x$dates)>6L) cat("...")
     cat("\n")
+
+    cat("\n // $si (serial interval):\n")
+    print(x$si))
+
 }
