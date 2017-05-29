@@ -5,20 +5,27 @@
 \alias{points.earlyR}
 \title{Plot earlyR objects}
 \usage{
-\method{plot}{earlyR}(x, y = c("R", "lambdas"), scale = 1, ...)
+\method{plot}{earlyR}(x, type = c("R", "lambdas"), scale = 1, ...)
 
 \method{points}{earlyR}(x, scale = 1, ...)
 }
 \arguments{
 \item{x}{A \code{earlyR} object.}
 
-\item{scale}{A numeric value indicating the scaling factor for lambdas.}
+\item{type}{The type of graphic to be generated, matching either "R" or
+"lamdbas"; "R" will plot the likelihood of R values; "lambdas" will plot
+the force of infection over time.}
+
+\item{scale}{A numeric value indicating the scaling factor for lambdas on the
+'y' axis.}
 
 \item{...}{Further arguments to be passed to other methods (not used).}
 }
 \description{
-This method is designed for plotting \code{earlyR} objects, output by the
-function \code{\link{get_R}}.
+These functions are designed for plotting \code{earlyR} objects, output by
+the function \code{\link{get_R}}. It can plot either the likelihood of R
+values, or the force of infection over time (see argument \code{type}). For
+\code{points}, the latter is used.
 }
 \author{
 Thibaut Jombart \email{thibautjombart@gmail.com}

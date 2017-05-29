@@ -21,12 +21,12 @@ print.earlyR <- function(x, ...){
     cat("\n")
 
     cat("\n // $lambda:\n")
-    cat(" ", head(x$lambda))
+    cat(" ", utils::head(x$lambda))
     if (length(x$lambda)>6L) cat("...")
     cat("\n")
 
     cat("\n // $dates:\n")
-    print(head(x$dates))
+    print(utils::head(x$dates))
     if (length(x$dates)>6L) cat("...")
     cat("\n")
 }
