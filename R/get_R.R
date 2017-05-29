@@ -104,9 +104,10 @@ get_R.integer <- function(x, disease = "ebola", si_mean = NULL, si_sd = NULL,
   si_param <- epitrix::gamma_mucv2shapescale(si_mean, si_sd / si_mean)
 
   MAX_T <- 1000
-  si <- distcrete::distcrete("gamma", shape = si_param$shape,
+  si_full <- distcrete::distcrete("gamma", shape = si_param$shape,
                              scale = si_param$scale,
-                             interval = 1L, w = 0L)$d(seq_len(MAX_T))
+                             interval = 1L, w = 0L)
+  si <- si_full$d(seq_len(MAX_T))
   si[1] <- 0
   si <- si / sum(si)
 
@@ -135,7 +136,8 @@ get_R.integer <- function(x, disease = "ebola", si_mean = NULL, si_sd = NULL,
               R_like = R_like,
               R_ml = R_ml,
               dates = dates_lambdas,
-              lambdas = all_lambdas)
+              lambdas = all_lambdas,
+              si = si_full)
   class(out) <- c("earlyR", "list")
 
   return(out)
