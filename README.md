@@ -68,17 +68,9 @@ following symptom onset dates:
 
 
 ```r
-
 onset <- as.Date(c("2017-02-04", "2017-02-12", "2017-02-15",
-                   "2017-02-23", "2017-03-01", "2017-03-01"
+                   "2017-02-23", "2017-03-01", "2017-03-01",
 		   "2017-03-02", "2017-03-03", "2017-03-03"))		 
-```
-
-```
-## Error: <text>:4:20: unexpected string constant
-## 3:                    "2017-02-23", "2017-03-01", "2017-03-01"
-## 4:                    "2017-03-02"
-##                       ^
 ```
 
 We compute the daily incidence using the package
@@ -93,13 +85,13 @@ i
 
 ```
 ## <incidence object>
-## [6 cases from days 2017-02-04 to 2017-03-01]
+## [9 cases from days 2017-02-04 to 2017-03-03]
 ## 
-## $counts: matrix with 26 rows and 1 columns
-## $n: 6 cases in total
-## $dates: 26 dates marking the left-side of bins
+## $counts: matrix with 28 rows and 1 columns
+## $n: 9 cases in total
+## $dates: 28 dates marking the left-side of bins
 ## $interval: 1 day
-## $timespan: 26 days
+## $timespan: 28 days
 ```
 
 ```r
@@ -121,10 +113,10 @@ i
 
 ```
 ## <incidence object>
-## [6 cases from days 2017-02-04 to 2017-03-21]
+## [9 cases from days 2017-02-04 to 2017-03-21]
 ## 
 ## $counts: matrix with 46 rows and 1 columns
-## $n: 6 cases in total
+## $n: 9 cases in total
 ## $dates: 46 dates marking the left-side of bins
 ## $interval: 1 day
 ## $timespan: 46 days
@@ -167,7 +159,7 @@ res
 ##  // class: earlyR, list
 ## 
 ##  // Maximum-Likelihood estimate of R ($R_ml):
-## [1] 0.9109109
+## [1] 1.021021
 ## 
 ## 
 ##  // $lambda:
@@ -224,7 +216,7 @@ summary(R_val)
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  0.2002  0.7558  1.0110  1.0884  1.3714  3.0531
+##  0.3353  0.8859  1.1061  1.1625  1.4114  2.7177
 ```
 
 ```r
@@ -233,7 +225,7 @@ quantile(R_val)
 
 ```
 ##        0%       25%       50%       75%      100% 
-## 0.2002002 0.7557558 1.0110110 1.3713714 3.0530531
+## 0.3353353 0.8858859 1.1061061 1.4114114 2.7177177
 ```
 
 ```r
@@ -242,7 +234,7 @@ quantile(R_val, c(0.025, 0.975))
 
 ```
 ##      2.5%     97.5% 
-## 0.4052803 2.1074825
+## 0.5302803 1.9921171
 ```
 
 ```r
@@ -310,7 +302,7 @@ mean(future_i) # average incidence / day
 ```
 
 ```
-## [1] 0.0671
+## [1] 0.1619
 ```
 
 ```r
@@ -333,7 +325,7 @@ summary(predicted_n)
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   0.000   0.000   0.000   2.013   3.000  43.000
+##   0.000   1.000   3.000   4.857   7.000  50.000
 ```
 
 ```r
@@ -364,21 +356,21 @@ alt_future_i
 ## 
 ##  // first rows/columns:
 ##       [,1] [,2] [,3] [,4] [,5] [,6]
-## 17227    0    1    0    0    1    0
-## 17228    1    1    0    0    0    0
-## 17229    0    0    2    1    0    1
-## 17230    0    0    0    3    0    1
+## 17229    0    0    1    0    1    1
+## 17230    0    0    1    0    1    0
+## 17231    1    1    1    0    1    1
+## 17232    1    1    1    0    4    1
 ##  .
 ##  .
 ##  .
 ## 
 ##  // dates:
-##  [1] "2017-03-02" "2017-03-03" "2017-03-04" "2017-03-05" "2017-03-06"
-##  [6] "2017-03-07" "2017-03-08" "2017-03-09" "2017-03-10" "2017-03-11"
-## [11] "2017-03-12" "2017-03-13" "2017-03-14" "2017-03-15" "2017-03-16"
-## [16] "2017-03-17" "2017-03-18" "2017-03-19" "2017-03-20" "2017-03-21"
-## [21] "2017-03-22" "2017-03-23" "2017-03-24" "2017-03-25" "2017-03-26"
-## [26] "2017-03-27" "2017-03-28" "2017-03-29" "2017-03-30" "2017-03-31"
+##  [1] "2017-03-04" "2017-03-05" "2017-03-06" "2017-03-07" "2017-03-08"
+##  [6] "2017-03-09" "2017-03-10" "2017-03-11" "2017-03-12" "2017-03-13"
+## [11] "2017-03-14" "2017-03-15" "2017-03-16" "2017-03-17" "2017-03-18"
+## [16] "2017-03-19" "2017-03-20" "2017-03-21" "2017-03-22" "2017-03-23"
+## [21] "2017-03-24" "2017-03-25" "2017-03-26" "2017-03-27" "2017-03-28"
+## [26] "2017-03-29" "2017-03-30" "2017-03-31" "2017-04-01" "2017-04-02"
 ```
 
 ```r
@@ -386,7 +378,7 @@ mean(alt_future_i)
 ```
 
 ```
-## [1] 1.875367
+## [1] 4.968767
 ```
 
 ```r
@@ -396,13 +388,23 @@ plot(alt_future_i)
 ![plot of chunk alternative](figure/alternative-1.png)
 
 ```r
+## alternative plot
+col <- "#cc66991a"
+matplot(alt_future_i, type = "l", col = col, lty = 1, lwd = 5,
+        xlab = "Day from today",
+	ylab = "Projected incidence")
+```
+
+![plot of chunk alternative](figure/alternative-2.png)
+
+```r
 alt_predicted_n <- colSums(alt_future_i)
 summary(alt_predicted_n)
 ```
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##    0.00   14.00   29.50   56.26   69.00  697.00
+##    3.00   51.75  102.00  149.06  196.00  891.00
 ```
 
 ```r
@@ -411,7 +413,8 @@ hist(alt_predicted_n, col = "darkred", border = "white",
      xlab = "Total number of new cases")
 ```
 
-![plot of chunk alternative](figure/alternative-2.png)
+![plot of chunk alternative](figure/alternative-3.png)
+
 
 
 
