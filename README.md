@@ -68,9 +68,17 @@ following symptom onset dates:
 
 
 ```r
-onset <- as.Date(c("2017-02-04", "2017-02-12", "2017-02-12",
-                   "2017-02-23", "2017-03-05", "2017-03-06",
-		   "2017-02-21", "2017-03-01", "2017-03-01"))
+
+onset <- as.Date(c("2017-02-04", "2017-02-12", "2017-02-15",
+                   "2017-02-23", "2017-03-01", "2017-03-01"
+		   "2017-03-02", "2017-03-03", "2017-03-03"))		 
+```
+
+```
+## Error: <text>:4:20: unexpected string constant
+## 3:                    "2017-02-23", "2017-03-01", "2017-03-01"
+## 4:                    "2017-03-02"
+##                       ^
 ```
 
 We compute the daily incidence using the package
@@ -85,13 +93,13 @@ i
 
 ```
 ## <incidence object>
-## [9 cases from days 2017-02-04 to 2017-03-06]
+## [6 cases from days 2017-02-04 to 2017-03-01]
 ## 
-## $counts: matrix with 31 rows and 1 columns
-## $n: 9 cases in total
-## $dates: 31 dates marking the left-side of bins
+## $counts: matrix with 26 rows and 1 columns
+## $n: 6 cases in total
+## $dates: 26 dates marking the left-side of bins
 ## $interval: 1 day
-## $timespan: 31 days
+## $timespan: 26 days
 ```
 
 ```r
@@ -101,25 +109,25 @@ plot(i, border = "white")
 ![plot of chunk incidence](figure/incidence-1.png)
 
 Notice that the epicurve stops exactly after the last date of onset. Let us
-assume it is currently the 12th March, and no case has been seen since the 6th
+assume it is currently the 21th March, and no case has been seen since the 6th
 March. We need to indicate this to `incidence` using:
 
 
 ```r
-today <- as.Date("2017-03-12")
+today <- as.Date("2017-03-21")
 i <- incidence(onset, last_date = today)
 i
 ```
 
 ```
 ## <incidence object>
-## [9 cases from days 2017-02-04 to 2017-03-12]
+## [6 cases from days 2017-02-04 to 2017-03-21]
 ## 
-## $counts: matrix with 37 rows and 1 columns
-## $n: 9 cases in total
-## $dates: 37 dates marking the left-side of bins
+## $counts: matrix with 46 rows and 1 columns
+## $n: 6 cases in total
+## $dates: 46 dates marking the left-side of bins
 ## $interval: 1 day
-## $timespan: 37 days
+## $timespan: 46 days
 ```
 
 ```r
@@ -128,8 +136,8 @@ plot(i, border = "white")
 
 ![plot of chunk incidence2](figure/incidence2-1.png)
 
-It is **very important** to make sure that the last days without cases are
-included here. Omitting this information would lead to an over-estimation of the
+It is **very important to make sure that the last days without cases are
+included here**. Omitting this information would lead to an over-estimation of the
 reproduction number (*R*).
 
 
@@ -147,60 +155,51 @@ sigma <- 9.3 # standard deviation in days
 The function `get_R` is then used to estimate the most likely values of *R*:
 
 ```r
+library(earlyR)
+
 res <- get_R(i, si_mean = mu, si_sd = sigma)
-```
-
-```
-## Error in get_R(i, si_mean = mu, si_sd = sigma): could not find function "get_R"
-```
-
-```r
 res
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'res' not found
+## 
+## /// Early estimate of reproduction number (R) //
+##  // class: earlyR, list
+## 
+##  // Maximum-Likelihood estimate of R ($R_ml):
+## [1] 0.9109109
+## 
+## 
+##  // $lambda:
+##   0.01838179 0.0273192 0.03514719 0.0414835 0.04623398 0.04946402...
+## 
+##  // $dates:
+## [1] "2017-02-05" "2017-02-06" "2017-02-07" "2017-02-08" "2017-02-09"
+## [6] "2017-02-10"
+## ...
+## 
+##  // $si (serial interval):
+## A discrete distribution
+##   name: gamma
+##   parameters:
+##     shape: 2.70655567117586
+##     scale: 5.65294117647059
 ```
 
 ```r
 plot(res)
 ```
 
-```
-## Error in plot(res): object 'res' not found
-```
+![plot of chunk estimate](figure/estimate-1.png)
 
 ```r
 plot(res, "lambdas", scale = length(onset) + 1)
-```
-
-```
-## Error in plot(res, "lambdas", scale = length(onset) + 1): object 'res' not found
-```
-
-```r
 abline(v = onset, lwd = 3, col = "grey")
-```
-
-```
-## Error in int_abline(a = a, b = b, h = h, v = v, untf = untf, ...): plot.new has not been called yet
-```
-
-```r
 abline(v = today, col = "blue", lty = 2, lwd = 2)
-```
-
-```
-## Error in int_abline(a = a, b = b, h = h, v = v, untf = untf, ...): plot.new has not been called yet
-```
-
-```r
 points(onset, seq_along(onset), pch = 20, cex = 3)
 ```
 
-```
-## Error in plot.xy(xy.coords(x, y), type = type, ...): plot.new has not been called yet
-```
+![plot of chunk estimate](figure/estimate-2.png)
 
 The first figure shows the distribution of likely values of *R*, and the
 Maximum-Likelihood (ML) estimation. The second figure show the global force of
@@ -209,8 +208,8 @@ and dots showing the dates of symptom of onset. The dashed blue line indicates
 current day.
 
 
-Based on this figure and on the estimated *R*, it seems likely that new cases
-will be seen in the near future. How many? We can use the package
+Based on this figure and on the estimated *R*, we can wonder if new cases
+will be seen in the near future. How likely is this? We can use the package
 [*projections*](https://github.com/reconhub/projections) to have an idea. The
 function `project` can be used to simulate a large number of future epicurves
 which are in line with the current data, serial interval and *R*. Rather than
@@ -220,18 +219,12 @@ the distribution), we use a sample of 1,000 likely *R* values using `sample_R`:
 
 ```r
 R_val <- sample_R(res, 1000)
-```
-
-```
-## Error in sample_R(res, 1000): could not find function "sample_R"
-```
-
-```r
 summary(R_val)
 ```
 
 ```
-## Error in summary(R_val): object 'R_val' not found
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  0.2002  0.7558  1.0110  1.0884  1.3714  3.0531
 ```
 
 ```r
@@ -239,7 +232,8 @@ quantile(R_val)
 ```
 
 ```
-## Error in quantile(R_val): object 'R_val' not found
+##        0%       25%       50%       75%      100% 
+## 0.2002002 0.7557558 1.0110110 1.3713714 3.0530531
 ```
 
 ```r
@@ -247,7 +241,8 @@ quantile(R_val, c(0.025, 0.975))
 ```
 
 ```
-## Error in quantile(R_val, c(0.025, 0.975)): object 'R_val' not found
+##      2.5%     97.5% 
+## 0.4052803 2.1074825
 ```
 
 ```r
@@ -256,43 +251,14 @@ hist(R_val, border = "grey", col = "navy",
      main = "Sample of likely R values")
 ```
 
-```
-## Error in hist(R_val, border = "grey", col = "navy", xlab = "Values of R", : object 'R_val' not found
-```
+![plot of chunk sample_R](figure/sample_R-1.png)
 
-We create the serial interval (SI) distribution using:
+We retrieve the serial interval (SI) from `res`:
 [*distcrete*](https://github.com/reconhub/distcrete).
  
 
 ```r
-library(distcrete)
-library(epitrix)
-
-cv <- mu/sigma # coefficient of variation
-cv
-```
-
-```
-## [1] 1.645161
-```
-
-```r
-param <- gamma_mucv2shapescale(mu, cv) # convertion to Gamma parameters
-param
-```
-
-```
-## $shape
-## [1] 0.3694733
-## 
-## $scale
-## [1] 41.4103
-```
-
-```r
-si <- distcrete::distcrete("gamma", interval = 1,
-                           shape = param$shape,
-                           scale = param$scale, w = 0)
+si <- res$si
 si
 ```
 
@@ -300,8 +266,8 @@ si
 ## A discrete distribution
 ##   name: gamma
 ##   parameters:
-##     shape: 0.369473279507882
-##     scale: 41.4103017689906
+##     shape: 2.70655567117586
+##     scale: 5.65294117647059
 ```
 
 We now use `project` to simulate future epicurves:
@@ -309,20 +275,145 @@ We now use `project` to simulate future epicurves:
 ```r
 library(projections)
 
-future_i <- project(i, R = R_val, n_sim = 1000, si = si, n_days = 30)
-```
-
-```
-## Error in sample(R, n_sim, replace = TRUE): object 'R_val' not found
-```
-
-```r
+future_i <- project(i, R = R_val, n_sim = 1000, si = res$si, n_days = 30)
 future_i
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'future_i' not found
+## 
+## /// Incidence projections //
+## 
+##   // class: projections, matrix
+##   // 30 dates (rows); 1,000 simulations (columns)
+## 
+##  // first rows/columns:
+##       [,1] [,2] [,3] [,4] [,5] [,6]
+## 17247    0    0    0    0    0    0
+## 17248    0    0    0    0    0    0
+## 17249    0    0    0    0    0    0
+## 17250    0    0    0    0    0    0
+##  .
+##  .
+##  .
+## 
+##  // dates:
+##  [1] "2017-03-22" "2017-03-23" "2017-03-24" "2017-03-25" "2017-03-26"
+##  [6] "2017-03-27" "2017-03-28" "2017-03-29" "2017-03-30" "2017-03-31"
+## [11] "2017-04-01" "2017-04-02" "2017-04-03" "2017-04-04" "2017-04-05"
+## [16] "2017-04-06" "2017-04-07" "2017-04-08" "2017-04-09" "2017-04-10"
+## [21] "2017-04-11" "2017-04-12" "2017-04-13" "2017-04-14" "2017-04-15"
+## [26] "2017-04-16" "2017-04-17" "2017-04-18" "2017-04-19" "2017-04-20"
 ```
+
+```r
+mean(future_i) # average incidence / day
+```
+
+```
+## [1] 0.0671
+```
+
+```r
+plot(future_i)
+```
+
+![plot of chunk projections](figure/projections-1.png)
+
+The plot shows the median (plain) and 95% credible interval of incidences. Here,
+this means most simulations have no new cases. This is likely due to the fact
+that no case have been seen for the last few days - this would not be compatible
+with ongoing growth of the epidemic. To have the distribution of the total
+number of new cases predicted in the next 30 days, we can use:
+
+
+```r
+predicted_n <- colSums(future_i)
+summary(predicted_n)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   0.000   0.000   0.000   2.013   3.000  43.000
+```
+
+```r
+hist(predicted_n, col = "darkred", border = "white",
+     main = "Prediction: new cases in 30 days",
+     xlab = "Total number of new cases")
+```
+
+![plot of chunk pred_size](figure/pred_size-1.png)
+
+
+Note that without the recent zero incidence, results would be drastically different:
+
+```r
+alt_i <- incidence(onset)
+alt_res <- get_R(alt_i, si_mean = mu, si_sd = sigma)
+alt_R_val <- sample_R(alt_res, 1000)
+alt_future_i <- project(alt_i, R = alt_R_val, n_sim = 1000, si = res$si, n_days = 30)
+alt_future_i
+```
+
+```
+## 
+## /// Incidence projections //
+## 
+##   // class: projections, matrix
+##   // 30 dates (rows); 1,000 simulations (columns)
+## 
+##  // first rows/columns:
+##       [,1] [,2] [,3] [,4] [,5] [,6]
+## 17227    0    1    0    0    1    0
+## 17228    1    1    0    0    0    0
+## 17229    0    0    2    1    0    1
+## 17230    0    0    0    3    0    1
+##  .
+##  .
+##  .
+## 
+##  // dates:
+##  [1] "2017-03-02" "2017-03-03" "2017-03-04" "2017-03-05" "2017-03-06"
+##  [6] "2017-03-07" "2017-03-08" "2017-03-09" "2017-03-10" "2017-03-11"
+## [11] "2017-03-12" "2017-03-13" "2017-03-14" "2017-03-15" "2017-03-16"
+## [16] "2017-03-17" "2017-03-18" "2017-03-19" "2017-03-20" "2017-03-21"
+## [21] "2017-03-22" "2017-03-23" "2017-03-24" "2017-03-25" "2017-03-26"
+## [26] "2017-03-27" "2017-03-28" "2017-03-29" "2017-03-30" "2017-03-31"
+```
+
+```r
+mean(alt_future_i)
+```
+
+```
+## [1] 1.875367
+```
+
+```r
+plot(alt_future_i)
+```
+
+![plot of chunk alternative](figure/alternative-1.png)
+
+```r
+alt_predicted_n <- colSums(alt_future_i)
+summary(alt_predicted_n)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    0.00   14.00   29.50   56.26   69.00  697.00
+```
+
+```r
+hist(alt_predicted_n, col = "darkred", border = "white",
+     main = "Prediction: new cases in 30 days",
+     xlab = "Total number of new cases")
+```
+
+![plot of chunk alternative](figure/alternative-2.png)
+
+
 
 
 

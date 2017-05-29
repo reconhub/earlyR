@@ -31,6 +31,6 @@ print.earlyR <- function(x, ...){
     cat("\n")
 
     cat("\n // $si (serial interval):\n")
-    print(x$si))
+    print(x$si)
 
 }
