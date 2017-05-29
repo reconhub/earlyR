@@ -39,7 +39,7 @@ plot.earlyR <- function(x, type = c("R", "lambdas"), scale = 1, ...) {
          label = paste("R =", round(x$R_ml,3)))
   } else {
 
-    lambdas <- x$lambdas / max(x$lambdas, na.rm = TRUE)
+    lambdas <- scale * x$lambdas / max(x$lambdas, na.rm = TRUE)
 
     graphics::plot(x$dates, lambdas, type = "h", lwd = 5,
                    col = grDevices::heat.colors(length(x$dates)),
@@ -60,7 +60,7 @@ plot.earlyR <- function(x, type = c("R", "lambdas"), scale = 1, ...) {
 #' @rdname plot.earlyR
 
 points.earlyR <- function(x, scale = 1, ...) {
-  lambdas <- x$lambdas / max(x$lambdas, na.rm = TRUE)
+  lambdas <- scale * x$lambdas / max(x$lambdas, na.rm = TRUE)
 
   graphics::points(x$dates,  lambdas, type = "h", lwd = 5,
                    col = grDevices::heat.colors(length(x$dates)), lend = 1,

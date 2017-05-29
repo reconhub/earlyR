@@ -50,26 +50,166 @@ The main features of the package include:
     to an existing plot.
 
 
+
 # Resources
+
+## Worked example
+
+In this example we assume a small outbreak of Ebola Virus Disease (EVD), for
+which the serial interval has been previously characterised. We study a fake
+outbreak, for which we will quantify infectiousness (R), and then project future
+incidence using the package
+[*projections*](https://github.com/reconhub/projections).
+
+The fake data we consider consist of confirmed cases with the
+following symptom onset dates:
+
+```{r data}
+
+onset <- as.Date(c("2017-02-04", "2017-02-12", "2017-02-12",
+                   "2017-02-23", "2017-03-05", "2017-03-06",
+		   "2017-02-21", "2017-03-01", "2017-03-01"))
+
+```
+
+We compute the daily incidence using the package
+[*incidence*](https://github.com/reconhub/incidence):
+
+```{r incidence}
+
+library(incidence)
+i <- incidence(onset)
+i
+plot(i, border = "white")
+
+```
+
+Notice that the epicurve stops exactly after the last date of onset. Let us
+assume it is currently the 12th March, and no case has been seen since the 6th
+March. We need to indicate this to `incidence` using:
+
+```{r incidence2}
+
+today <- as.Date("2017-03-12")
+i <- incidence(onset, last_date = today)
+i
+plot(i, border = "white")
+
+```
+
+It is **very important** to make sure that the last days without cases are
+included here. Omitting this information would lead to an over-estimation of the
+reproduction number (*R*).
+
+
+For estimating *R*, we need estimates of the mean and standard deviation of the
+serial interval, i.e. the delay between primary and secondary symptom onset
+dates. This has been quantified durin the West African EVD outbreak (WHO Ebola
+Response Team (2014) NEJM 371:1481–1495):
+
+```{r si}
+
+mu <- 15.3 # mean in days days
+sigma <- 9.3 # standard deviation in days
+
+```
+
+The function `get_R` is then used to estimate the most likely values of *R*:
+```{r estimate}
+
+res <- get_R(i, si_mean = mu, si_sd = sigma)
+res
+plot(res)
+
+plot(res, "lambdas", scale = length(onset) + 1)
+abline(v = onset, lwd = 3, col = "grey")
+abline(v = today, col = "blue", lty = 2, lwd = 2)
+points(onset, seq_along(onset), pch = 20, cex = 3)
+
+```
+
+The first figure shows the distribution of likely values of *R*, and the
+Maximum-Likelihood (ML) estimation. The second figure show the global force of
+infection over time, with vertical grey bars indicating the presence of cases,
+and dots showing the dates of symptom of onset. The dashed blue line indicates
+current day.
+
+
+Based on this figure and on the estimated *R*, it seems likely that new cases
+will be seen in the near future. How many? We can use the package
+[*projections*](https://github.com/reconhub/projections) to have an idea. The
+function `project` can be used to simulate a large number of future epicurves
+which are in line with the current data, serial interval and *R*. Rather than
+using a single ML estimate of *R* (as we can see, there is some variability in
+the distribution), we use a sample of 1,000 likely *R* values using `sample_R`:
+
+```{r sample_R}
+
+R_val <- sample_R(res, 1000)
+summary(R_val)
+quantile(R_val)
+quantile(R_val, c(0.025, 0.975))
+hist(R_val, border = "grey", col = "navy",
+     xlab = "Values of R",
+     main = "Sample of likely R values")
+
+```
+
+We create the serial interval (SI) distribution using:
+[*distcrete*](https://github.com/reconhub/distcrete).
+ 
+```{r generate_si}
+
+library(distcrete)
+library(epitrix)
+
+cv <- mu/sigma # coefficient of variation
+cv
+param <- gamma_mucv2shapescale(mu, cv) # convertion to Gamma parameters
+param
+si <- distcrete::distcrete("gamma", interval = 1,
+                           shape = param$shape,
+                           scale = param$scale, w = 0)
+si
+
+```
+
+We now use `project` to simulate future epicurves:
+```{r projections}
+
+library(projections)
+
+future_i <- project(i, R = R_val, n_sim = 1000, si = si, n_days = 30)
+future_i
+
+
+```
+
+
+
 
 ## Vignettes
 
-An overview and examples of *earlyR* are provided in the vignettes:
+Vignettes are still in development.
 
-...
 
 ## Websites
 
-The following websites are available:
+A dedicated website is still in development.
 
-...
+
+
 
 ## Getting help online
 
-Bug reports and feature requests should be posted on *github* using the [*issue*](http://github.com/reconhub/earlyR/issues) system. All other questions should be posted on the **RECON forum**: <br>
+Bug reports and feature requests should be posted on *github* using the
+[*issue*](http://github.com/reconhub/earlyR/issues) system. All other questions
+should be posted on the **RECON forum**: <br>
 [http://www.repidemicsconsortium.org/forum/](http://www.repidemicsconsortium.org/forum/)
 
 Contributions are welcome via **pull requests**.
 
-Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
+Please note that this project is released with a [Contributor Code of
+Conduct](CONDUCT.md). By participating in this project you agree to abide by its
+terms.
 
