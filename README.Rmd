@@ -211,7 +211,7 @@ plot(alt_future_i)
 col <- "#cc66991a"
 matplot(alt_future_i, type = "l", col = col, lty = 1, lwd = 5,
         xlab = "Day from today",
-	ylab = "Projected incidence")
+	ylab = "Projected daily incidence")
 
 alt_predicted_n <- colSums(alt_future_i)
 summary(alt_predicted_n)
