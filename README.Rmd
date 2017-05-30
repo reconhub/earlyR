@@ -55,6 +55,12 @@ The main features of the package include:
 
 ## Worked example
 
+This example is a simplified version of the introductory vignette (see section
+below), where `earlyR` is used in conjunction with other packages to assess
+infectiousness and growth potential of an early Ebola Virus Disease (EVD)
+outbreak. Here, we simply illustrate how `earlyR` can be used for assessing
+infectiousness based on a few confirmed/probable cases.
+
 In this example we assume a small outbreak of Ebola Virus Disease (EVD), for
 which the serial interval has been previously characterised. We study a fake
 outbreak, for which we will quantify infectiousness (R), and then project future
@@ -72,23 +78,11 @@ onset <- as.Date(c("2017-02-04", "2017-02-12", "2017-02-15",
 
 ```
 
+We assume the current date is 21st March.
 We compute the daily incidence using the package
 [*incidence*](https://github.com/reconhub/incidence):
 
 ```{r incidence}
-
-library(incidence)
-i <- incidence(onset)
-i
-plot(i, border = "white")
-
-```
-
-Notice that the epicurve stops exactly after the last date of onset. Let us
-assume it is currently the 21th March, and no case has been seen since the 6th
-March. We need to indicate this to `incidence` using:
-
-```{r incidence2}
 
 today <- as.Date("2017-03-21")
 i <- incidence(onset, last_date = today)
@@ -97,7 +91,7 @@ plot(i, border = "white")
 
 ```
 
-It is **very important to make sure that the last days without cases are
+**Note:** It is **very important to make sure that the last days without cases are
 included here**. Omitting this information would lead to an over-estimation of the
 reproduction number (*R*).
 
@@ -123,6 +117,28 @@ res <- get_R(i, si_mean = mu, si_sd = sigma)
 res
 plot(res)
 
+```
+
+The first figure shows the distribution of likely values of *R*, and the
+Maximum-Likelihood (ML) estimation. To derive other statistics for this
+distribution, we can use `sample_R` to get a large sample of likely *R* values,
+and then compute statistics on this sample:
+
+```{r samples}
+
+R_val <- sample_R(res, 1000)
+summary(R_val) # basic stats
+quantile(R_val) # quartiles
+quantile(R_val, c(0.025, 0.975)) # 95% credibility interval
+hist(R_val, border = "grey", col = "navy",
+     xlab = "Values of R",
+     main = "Sample of likely R values")
+
+```
+
+Finally, we can also represent infectiousness over time using:
+
+```{r lamdbas}
 plot(res, "lambdas", scale = length(onset) + 1)
 abline(v = onset, lwd = 3, col = "grey")
 abline(v = today, col = "blue", lty = 2, lwd = 2)
@@ -130,106 +146,21 @@ points(onset, seq_along(onset), pch = 20, cex = 3)
 
 ```
 
-The first figure shows the distribution of likely values of *R*, and the
-Maximum-Likelihood (ML) estimation. The second figure show the global force of
-infection over time, with vertical grey bars indicating the presence of cases,
-and dots showing the dates of symptom of onset. The dashed blue line indicates
-current day.
-
-
-Based on this figure and on the estimated *R*, we can wonder if new cases
-will be seen in the near future. How likely is this? We can use the package
-[*projections*](https://github.com/reconhub/projections) to have an idea. The
-function `project` can be used to simulate a large number of future epicurves
-which are in line with the current data, serial interval and *R*. Rather than
-using a single ML estimate of *R* (as we can see, there is some variability in
-the distribution), we use a sample of 1,000 likely *R* values using `sample_R`:
-
-```{r sample_R}
-
-R_val <- sample_R(res, 1000)
-summary(R_val)
-quantile(R_val)
-quantile(R_val, c(0.025, 0.975))
-hist(R_val, border = "grey", col = "navy",
-     xlab = "Values of R",
-     main = "Sample of likely R values")
-
-```
-
-We retrieve the serial interval (SI) from `res`:
-[*distcrete*](https://github.com/reconhub/distcrete).
- 
-```{r generate_si}
-
-si <- res$si
-si
-
-```
-
-We now use `project` to simulate future epicurves:
-```{r projections}
-
-library(projections)
-
-future_i <- project(i, R = R_val, n_sim = 1000, si = res$si, n_days = 30)
-future_i
-mean(future_i) # average incidence / day
-plot(future_i)
-
-```
-
-The plot shows the median (plain) and 95% credible interval of incidences. Here,
-this means most simulations have no new cases. This is likely due to the fact
-that no case have been seen for the last few days - this would not be compatible
-with ongoing growth of the epidemic. To have the distribution of the total
-number of new cases predicted in the next 30 days, we can use:
-
-```{r pred_size}
-
-predicted_n <- colSums(future_i)
-summary(predicted_n)
-hist(predicted_n, col = "darkred", border = "white",
-     main = "Prediction: new cases in 30 days",
-     xlab = "Total number of new cases")
-
-```
-
-
-Note that without the recent zero incidence, results would be drastically different:
-```{r alternative}
-
-alt_i <- incidence(onset)
-alt_res <- get_R(alt_i, si_mean = mu, si_sd = sigma)
-alt_R_val <- sample_R(alt_res, 1000)
-alt_future_i <- project(alt_i, R = alt_R_val, n_sim = 1000, si = res$si, n_days = 30)
-alt_future_i
-mean(alt_future_i)
-plot(alt_future_i)
-
-## alternative plot
-col <- "#cc66991a"
-matplot(alt_future_i, type = "l", col = col, lty = 1, lwd = 5,
-        xlab = "Day from today",
-	ylab = "Projected daily incidence")
-
-alt_predicted_n <- colSums(alt_future_i)
-summary(alt_predicted_n)
-hist(alt_predicted_n, col = "darkred", border = "white",
-     main = "Prediction: new cases in 30 days",
-     xlab = "Total number of new cases")
-
-```
-
-
-
+This figure shows the global force of infection over time, with vertical grey
+bars indicating the presence of cases, and dots showing the dates of symptom of
+onset. The dashed blue line indicates current day. Note that the vertical scale
+for the bars is arbitrary, and only represents the relative force of infection.
 
 
 
 
 ## Vignettes
 
-Vignettes are still in development.
+`Currently available vignettes can be accessed from *R* using:
+
+- `vignette("earlyR")`: an introduction to `earlyR` using a simulated Ebola
+  Virus Disease (EVD) outbreak; includes projections of future incidence using
+  *projections*.
 
 
 ## Websites
