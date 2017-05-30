@@ -84,6 +84,7 @@ We compute the daily incidence using the package
 
 ```{r incidence}
 
+library(incidence)
 today <- as.Date("2017-03-21")
 i <- incidence(onset, last_date = today)
 i

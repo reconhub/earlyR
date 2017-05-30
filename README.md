@@ -85,29 +85,28 @@ We compute the daily incidence using the package
 
 
 ```r
+library(incidence)
 today <- as.Date("2017-03-21")
 i <- incidence(onset, last_date = today)
-```
-
-```
-## Error in incidence(onset, last_date = today): could not find function "incidence"
-```
-
-```r
 i
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'i' not found
+## <incidence object>
+## [9 cases from days 2017-02-04 to 2017-03-21]
+## 
+## $counts: matrix with 46 rows and 1 columns
+## $n: 9 cases in total
+## $dates: 46 dates marking the left-side of bins
+## $interval: 1 day
+## $timespan: 46 days
 ```
 
 ```r
 plot(i, border = "white")
 ```
 
-```
-## Error in plot(i, border = "white"): object 'i' not found
-```
+![plot of chunk incidence](figure/incidence-1.png)
 
 **Note:** It is **very important to make sure that the last days without cases are
 included here**. Omitting this information would lead to an over-estimation of the
@@ -131,27 +130,39 @@ The function `get_R` is then used to estimate the most likely values of *R*:
 library(earlyR)
 
 res <- get_R(i, si_mean = mu, si_sd = sigma)
-```
-
-```
-## Error in get_R(i, si_mean = mu, si_sd = sigma): object 'i' not found
-```
-
-```r
 res
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'res' not found
+## 
+## /// Early estimate of reproduction number (R) //
+##  // class: earlyR, list
+## 
+##  // Maximum-Likelihood estimate of R ($R_ml):
+## [1] 1.021021
+## 
+## 
+##  // $lambda:
+##   0.01838179 0.0273192 0.03514719 0.0414835 0.04623398 0.04946402...
+## 
+##  // $dates:
+## [1] "2017-02-05" "2017-02-06" "2017-02-07" "2017-02-08" "2017-02-09"
+## [6] "2017-02-10"
+## ...
+## 
+##  // $si (serial interval):
+## A discrete distribution
+##   name: gamma
+##   parameters:
+##     shape: 2.70655567117586
+##     scale: 5.65294117647059
 ```
 
 ```r
 plot(res)
 ```
 
-```
-## Error in plot(res): object 'res' not found
-```
+![plot of chunk estimate](figure/estimate-1.png)
 
 The first figure shows the distribution of likely values of *R*, and the
 Maximum-Likelihood (ML) estimation. To derive other statistics for this
@@ -161,18 +172,12 @@ and then compute statistics on this sample:
 
 ```r
 R_val <- sample_R(res, 1000)
-```
-
-```
-## Error in inherits(x, "earlyR"): object 'res' not found
-```
-
-```r
 summary(R_val) # basic stats
 ```
 
 ```
-## Error in summary(R_val): object 'R_val' not found
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  0.2402  0.8609  1.0911  1.1394  1.3614  2.9229
 ```
 
 ```r
@@ -180,7 +185,8 @@ quantile(R_val) # quartiles
 ```
 
 ```
-## Error in quantile(R_val): object 'R_val' not found
+##        0%       25%       50%       75%      100% 
+## 0.2402402 0.8608609 1.0910911 1.3613614 2.9229229
 ```
 
 ```r
@@ -188,7 +194,8 @@ quantile(R_val, c(0.025, 0.975)) # 95% credibility interval
 ```
 
 ```
-## Error in quantile(R_val, c(0.025, 0.975)): object 'R_val' not found
+##      2.5%     97.5% 
+## 0.5153904 2.0170170
 ```
 
 ```r
@@ -197,44 +204,19 @@ hist(R_val, border = "grey", col = "navy",
      main = "Sample of likely R values")
 ```
 
-```
-## Error in hist(R_val, border = "grey", col = "navy", xlab = "Values of R", : object 'R_val' not found
-```
+![plot of chunk samples](figure/samples-1.png)
 
 Finally, we can also represent infectiousness over time using:
 
 
 ```r
 plot(res, "lambdas", scale = length(onset) + 1)
-```
-
-```
-## Error in plot(res, "lambdas", scale = length(onset) + 1): object 'res' not found
-```
-
-```r
 abline(v = onset, lwd = 3, col = "grey")
-```
-
-```
-## Error in int_abline(a = a, b = b, h = h, v = v, untf = untf, ...): plot.new has not been called yet
-```
-
-```r
 abline(v = today, col = "blue", lty = 2, lwd = 2)
-```
-
-```
-## Error in int_abline(a = a, b = b, h = h, v = v, untf = untf, ...): plot.new has not been called yet
-```
-
-```r
 points(onset, seq_along(onset), pch = 20, cex = 3)
 ```
 
-```
-## Error in plot.xy(xy.coords(x, y), type = type, ...): plot.new has not been called yet
-```
+![plot of chunk lamdbas](figure/lamdbas-1.png)
 
 This figure shows the global force of infection over time, with vertical grey
 bars indicating the presence of cases, and dots showing the dates of symptom of
