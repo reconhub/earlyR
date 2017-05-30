@@ -57,11 +57,12 @@ The main features of the package include:
 
 ## Worked example
 
-This example is a simplified version of the introductory vignette (see section
-below), where `earlyR` is used in conjunction with other packages to assess
-infectiousness and growth potential of an early Ebola Virus Disease (EVD)
-outbreak. Here, we simply illustrate how `earlyR` can be used for assessing
-infectiousness based on a few confirmed/probable cases.
+This example is a simplified version of the
+[*introductory vignette*](http://www.repidemicsconsortium.org/earlyR/articles/earlyR.html)
+(see section below), where `earlyR` is used in conjunction with other packages
+to assess infectiousness and growth potential of an early Ebola Virus Disease
+(EVD) outbreak. Here, we simply illustrate how `earlyR` can be used for
+assessing infectiousness based on a few confirmed/probable cases.
 
 In this example we assume a small outbreak of Ebola Virus Disease (EVD), for
 which the serial interval has been previously characterised. We study a fake
@@ -177,7 +178,7 @@ summary(R_val) # basic stats
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  0.2402  0.8609  1.0911  1.1394  1.3614  2.9229
+##  0.3453  0.8646  1.0961  1.1368  1.3664  2.5225
 ```
 
 ```r
@@ -186,7 +187,7 @@ quantile(R_val) # quartiles
 
 ```
 ##        0%       25%       50%       75%      100% 
-## 0.2402402 0.8608609 1.0910911 1.3613614 2.9229229
+## 0.3453453 0.8646146 1.0960961 1.3663664 2.5225225
 ```
 
 ```r
@@ -195,7 +196,7 @@ quantile(R_val, c(0.025, 0.975)) # 95% credibility interval
 
 ```
 ##      2.5%     97.5% 
-## 0.5153904 2.0170170
+## 0.5254004 2.0021271
 ```
 
 ```r
@@ -230,9 +231,10 @@ for the bars is arbitrary, and only represents the relative force of infection.
 
 `Currently available vignettes can be accessed from *R* using:
 
-- `vignette("earlyR")`: an introduction to `earlyR` using a simulated Ebola
-  Virus Disease (EVD) outbreak; includes projections of future incidence using
-  *projections*.
+- `vignette("earlyR")`: an
+  [introduction to `earlyR`](http://www.repidemicsconsortium.org/earlyR/articles/earlyR.html)
+  using a simulated Ebola Virus Disease (EVD) outbreak; includes projections of
+  future incidence using *projections*.
 
 
 ## Websites

@@ -38,14 +38,7 @@
   <a href="../news/index.html">News</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/reconhub/earlyR/">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul>
+<ul class="nav navbar-nav navbar-right"></ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -142,13 +135,13 @@ res</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">R_val &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sample_R.html">sample_R</a></span>(res, <span class="dv">1000</span>)
 <span class="kw">summary</span>(R_val)</code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  0.3504  0.9009  1.1461  1.1748  1.3976  3.0030</code></pre>
+##  0.3353  0.8646  1.0861  1.1457  1.3864  2.9680</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">quantile</span>(R_val)</code></pre></div>
 <pre><code>##        0%       25%       50%       75%      100% 
-## 0.3503504 0.9009009 1.1461461 1.3976476 3.0030030</code></pre>
+## 0.3353353 0.8646146 1.0860861 1.3863864 2.9679680</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">quantile</span>(R_val, <span class="kw">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</code></pre></div>
 <pre><code>##      2.5%     97.5% 
-## 0.5103854 2.0922172</code></pre>
+## 0.5504254 1.9569570</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(R_val, <span class="dt">border =</span> <span class="st">"grey"</span>, <span class="dt">col =</span> <span class="st">"navy"</span>,
      <span class="dt">xlab =</span> <span class="st">"Values of R"</span>,
      <span class="dt">main =</span> <span class="st">"Sample of likely R values"</span>)</code></pre></div>
@@ -174,10 +167,10 @@ future_i</code></pre></div>
 ## 
 ##  // first rows/columns:
 ##       [,1] [,2] [,3] [,4] [,5] [,6]
-## 17247    0    0    0    1    0    0
-## 17248    0    0    0    0    0    0
-## 17249    0    0    0    0    0    0
-## 17250    0    0    1    0    0    0
+## 17247    0    0    0    0    0    0
+## 17248    0    0    1    0    1    0
+## 17249    0    1    0    0    0    0
+## 17250    0    0    0    0    0    0
 ##  .
 ##  .
 ##  .
@@ -190,14 +183,14 @@ future_i</code></pre></div>
 ## [21] "2017-04-11" "2017-04-12" "2017-04-13" "2017-04-14" "2017-04-15"
 ## [26] "2017-04-16" "2017-04-17" "2017-04-18" "2017-04-19" "2017-04-20"</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(future_i) <span class="co"># average incidence / day</span></code></pre></div>
-<pre><code>## [1] 0.1581333</code></pre>
+<pre><code>## [1] 0.1599667</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(future_i)</code></pre></div>
 <p><img src="earlyR_files/figure-html/projections-1.png" width="672"></p>
 <p>The plot shows the median (plain) and 95% credible interval of incidences. Here, this means most simulations have no new cases. This is likely due to the fact that no case have been seen for the last few days - this would not be compatible with ongoing growth of the epidemic. To have the distribution of the total number of new cases predicted in the next 30 days, we can use:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">predicted_n &lt;-<span class="st"> </span><span class="kw">colSums</span>(future_i)
 <span class="kw">summary</span>(predicted_n)</code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   0.000   1.000   3.000   4.744   7.000  41.000</code></pre>
+##   0.000   1.000   3.000   4.799   7.000  79.000</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(predicted_n, <span class="dt">col =</span> <span class="st">"darkred"</span>, <span class="dt">border =</span> <span class="st">"white"</span>,
      <span class="dt">main =</span> <span class="st">"Prediction: new cases in 30 days"</span>,
      <span class="dt">xlab =</span> <span class="st">"Total number of new cases"</span>)</code></pre></div>
@@ -216,10 +209,10 @@ alt_future_i</code></pre></div>
 ## 
 ##  // first rows/columns:
 ##       [,1] [,2] [,3] [,4] [,5] [,6]
-## 17229    2    0    0    0    0    0
-## 17230    2    1    0    0    1    0
-## 17231    2    0    1    2    0    4
-## 17232    2    2    0    3    2    0
+## 17229    1    0    0    0    0    1
+## 17230    0    0    0    1    0    0
+## 17231    2    0    0    0    2    0
+## 17232    1    3    0    2    2    2
 ##  .
 ##  .
 ##  .
@@ -232,7 +225,7 @@ alt_future_i</code></pre></div>
 ## [21] "2017-03-24" "2017-03-25" "2017-03-26" "2017-03-27" "2017-03-28"
 ## [26] "2017-03-29" "2017-03-30" "2017-03-31" "2017-04-01" "2017-04-02"</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(alt_future_i)</code></pre></div>
-<pre><code>## [1] 5.4333</code></pre>
+<pre><code>## [1] 5.008467</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(alt_future_i)</code></pre></div>
 <p><img src="earlyR_files/figure-html/alternative-1.png" width="672"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## alternative plot
@@ -244,7 +237,7 @@ col &lt;-<span class="st"> "#cc66991a"</span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">alt_predicted_n &lt;-<span class="st"> </span><span class="kw">colSums</span>(alt_future_i)
 <span class="kw">summary</span>(alt_predicted_n)</code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##     2.0    48.0   100.5   163.0   211.0  1094.0</code></pre>
+##     2.0    54.0   103.0   150.3   196.2  1072.0</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(alt_predicted_n, <span class="dt">col =</span> <span class="st">"darkred"</span>, <span class="dt">border =</span> <span class="st">"white"</span>,
      <span class="dt">main =</span> <span class="st">"Prediction: new cases in 30 days"</span>,
      <span class="dt">xlab =</span> <span class="st">"Total number of new cases"</span>)</code></pre></div>

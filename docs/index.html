@@ -38,14 +38,7 @@
   <a href="news/index.html">News</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/reconhub/earlyR/">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul>
+<ul class="nav navbar-nav navbar-right"></ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -97,7 +90,7 @@
 <div id="worked-example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#worked-example" class="anchor"></a>Worked example</h2>
-<p>This example is a simplified version of the introductory vignette (see section below), where <code>earlyR</code> is used in conjunction with other packages to assess infectiousness and growth potential of an early Ebola Virus Disease (EVD) outbreak. Here, we simply illustrate how <code>earlyR</code> can be used for assessing infectiousness based on a few confirmed/probable cases.</p>
+<p>This example is a simplified version of the <a href="http://www.repidemicsconsortium.org/earlyR/articles/earlyR.html"><em>introductory vignette</em></a> (see section below), where <code>earlyR</code> is used in conjunction with other packages to assess infectiousness and growth potential of an early Ebola Virus Disease (EVD) outbreak. Here, we simply illustrate how <code>earlyR</code> can be used for assessing infectiousness based on a few confirmed/probable cases.</p>
 <p>In this example we assume a small outbreak of Ebola Virus Disease (EVD), for which the serial interval has been previously characterised. We study a fake outbreak, for which we will quantify infectiousness (R), and then project future incidence using the package <a href="https://github.com/reconhub/projections"><em>projections</em></a>.</p>
 <p>The fake data we consider consist of confirmed cases with the following symptom onset dates:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">onset &lt;-<span class="st"> </span><span class="kw">as.Date</span>(<span class="kw">c</span>(<span class="st">"2017-02-04"</span>, <span class="st">"2017-02-12"</span>, <span class="st">"2017-02-15"</span>,
@@ -155,13 +148,13 @@ res</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">R_val &lt;-<span class="st"> </span><span class="kw"><a href="reference/sample_R.html">sample_R</a></span>(res, <span class="dv">1000</span>)
 <span class="kw">summary</span>(R_val) <span class="co"># basic stats</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  0.3604  0.8609  1.1261  1.1642  1.3914  2.6827</code></pre>
+##  0.3504  0.8709  1.1061  1.1403  1.3664  2.8478</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">quantile</span>(R_val) <span class="co"># quartiles</span></code></pre></div>
 <pre><code>##        0%       25%       50%       75%      100% 
-## 0.3603604 0.8608609 1.1261261 1.3913914 2.6826827</code></pre>
+## 0.3503504 0.8708709 1.1061061 1.3663664 2.8478478</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">quantile</span>(R_val, <span class="kw">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>)) <span class="co"># 95% credibility interval</span></code></pre></div>
 <pre><code>##      2.5%     97.5% 
-## 0.5501752 2.0629379</code></pre>
+## 0.5305305 1.9772272</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(R_val, <span class="dt">border =</span> <span class="st">"grey"</span>, <span class="dt">col =</span> <span class="st">"navy"</span>,
      <span class="dt">xlab =</span> <span class="st">"Values of R"</span>,
      <span class="dt">main =</span> <span class="st">"Sample of likely R values"</span>)</code></pre></div>
@@ -180,7 +173,7 @@ res</code></pre></div>
 <p>`Currently available vignettes can be accessed from <em>R</em> using:</p>
 <ul>
 <li>
-<code><a href="articles/earlyR.html">vignette("earlyR")</a></code>: an introduction to <code>earlyR</code> using a simulated Ebola Virus Disease (EVD) outbreak; includes projections of future incidence using <em>projections</em>.</li>
+<code><a href="articles/earlyR.html">vignette("earlyR")</a></code>: an <a href="http://www.repidemicsconsortium.org/earlyR/articles/earlyR.html">introduction to <code>earlyR</code></a> using a simulated Ebola Virus Disease (EVD) outbreak; includes projections of future incidence using <em>projections</em>.</li>
 </ul>
 </div>
 <div id="websites" class="section level2">
@@ -202,8 +195,6 @@ res</code></pre></div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/reconhub/earlyR/">https://​github.com/​reconhub/​earlyR/​</a>
-</li>
 <li>Report a bug at <br><a href="https://github.com/reconhub/earlyR/issues">https://​github.com/​reconhub/​earlyR/​issues</a>
 </li>
 </ul>

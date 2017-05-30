@@ -55,11 +55,12 @@ The main features of the package include:
 
 ## Worked example
 
-This example is a simplified version of the introductory vignette (see section
-below), where `earlyR` is used in conjunction with other packages to assess
-infectiousness and growth potential of an early Ebola Virus Disease (EVD)
-outbreak. Here, we simply illustrate how `earlyR` can be used for assessing
-infectiousness based on a few confirmed/probable cases.
+This example is a simplified version of the
+[*introductory vignette*](http://www.repidemicsconsortium.org/earlyR/articles/earlyR.html)
+(see section below), where `earlyR` is used in conjunction with other packages
+to assess infectiousness and growth potential of an early Ebola Virus Disease
+(EVD) outbreak. Here, we simply illustrate how `earlyR` can be used for
+assessing infectiousness based on a few confirmed/probable cases.
 
 In this example we assume a small outbreak of Ebola Virus Disease (EVD), for
 which the serial interval has been previously characterised. We study a fake
@@ -159,9 +160,10 @@ for the bars is arbitrary, and only represents the relative force of infection.
 
 `Currently available vignettes can be accessed from *R* using:
 
-- `vignette("earlyR")`: an introduction to `earlyR` using a simulated Ebola
-  Virus Disease (EVD) outbreak; includes projections of future incidence using
-  *projections*.
+- `vignette("earlyR")`: an
+  [introduction to `earlyR`](http://www.repidemicsconsortium.org/earlyR/articles/earlyR.html)
+  using a simulated Ebola Virus Disease (EVD) outbreak; includes projections of
+  future incidence using *projections*.
 
 
 ## Websites
