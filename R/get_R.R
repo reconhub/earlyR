@@ -93,11 +93,12 @@ get_R.integer <- function(x, disease = "ebola", si_mean = NULL, si_sd = NULL,
   ## The serial interval is a discretised Gamma distribution. We ensure w(0) = 0
   ## so that a case cannot contribute to its own infectiousness.
 
-  if (disease == "ebola") {
+  if (is.null(si_mean) && disease == "ebola") {
     si_mean <- 15.3
+  }
+  if (is.null(si_sd) && disease == "ebola") {
     si_sd <- 9.3
   }
-
   if (is.null(si_mean)) stop("si_mean is missing")
   if (is.null(si_sd)) stop("si_sd is missing")
 
