@@ -12,7 +12,7 @@ get_R(x, ...)
 
 \method{get_R}{default}(x, ...)
 
-\method{get_R}{integer}(x, disease = "ebola", si_mean = NULL,
+\method{get_R}{integer}(x, disease = "ebola", si = NULL, si_mean = NULL,
   si_sd = NULL, max_R = 5, days = 30, ...)
 
 \method{get_R}{numeric}(x, ...)
@@ -31,9 +31,14 @@ cases. Note that 'zero' incidence should be reported as well (see details).}
 studied. If provided, then \code{si_mean} and \code{si_sd} will be filled
 in automatically using value from the literature.}
 
-\item{si_mean}{The mean of the serial interval distribution.}
+\item{si}{A \code{distcrete} object (see package \code{distcrete}) containing
+the discretized distribution of the serial interval.}
 
-\item{si_sd}{The standard deviation of the serial interval distribution.}
+\item{si_mean}{The mean of the serial interval distribution. Ignored if
+\code{si} is provided.}
+
+\item{si_sd}{The standard deviation of the serial interval
+distribution. Ignored if \code{si} is provided.}
 
 \item{max_R}{The maximum value the reproduction number can take.}
 
@@ -48,12 +53,12 @@ primary to secondary onset) and ii) incidence data.
 }
 \details{
 The estimation of R relies on all available incidence data. As such,
-  all zero incidence after the first case should be included in
-  \code{x}. When using \code{inidence} from the 'incidence' package, make
-  sure you use the argument \code{last_date} to indicate where the epicurve
-  stops, otherwise the curve is stopped after the last case. Use
-  \code{as.data.frame} to double-check that the epicurve includes the last
-  'zeros'.
+    all zero incidence after the first case should be included in
+    \code{x}. When using \code{inidence} from the 'incidence' package, make
+    sure you use the argument \code{last_date} to indicate where the epicurve
+    stops, otherwise the curve is stopped after the last case. Use
+    \code{as.data.frame} to double-check that the epicurve includes the last
+    'zeros'.
 }
 \examples{
 

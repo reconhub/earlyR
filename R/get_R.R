@@ -18,12 +18,12 @@
 #' @param ... Further arguments to be passed to the methods.
 #'
 #' @details The estimation of R relies on all available incidence data. As such,
-#'   all zero incidence after the first case should be included in
-#'   \code{x}. When using \code{inidence} from the 'incidence' package, make
-#'   sure you use the argument \code{last_date} to indicate where the epicurve
-#'   stops, otherwise the curve is stopped after the last case. Use
-#'   \code{as.data.frame} to double-check that the epicurve includes the last
-#'   'zeros'.
+#'     all zero incidence after the first case should be included in
+#'     \code{x}. When using \code{inidence} from the 'incidence' package, make
+#'     sure you use the argument \code{last_date} to indicate where the epicurve
+#'     stops, otherwise the curve is stopped after the last case. Use
+#'     \code{as.data.frame} to double-check that the epicurve includes the last
+#'     'zeros'.
 #'
 #' @examples
 #'
@@ -71,9 +71,14 @@ get_R.default <- function(x, ...) {
 #'   studied. If provided, then \code{si_mean} and \code{si_sd} will be filled
 #'   in automatically using value from the literature.
 #'
-#' @param si_mean The mean of the serial interval distribution.
+#' @param si A \code{distcrete} object (see package \code{distcrete}) containing
+#'     the discretized distribution of the serial interval.
 #'
-#' @param si_sd The standard deviation of the serial interval distribution.
+#' @param si_mean The mean of the serial interval distribution. Ignored if
+#'     \code{si} is provided.
+#'
+#' @param si_sd The standard deviation of the serial interval
+#'     distribution. Ignored if \code{si} is provided.
 #'
 #' @param max_R The maximum value the reproduction number can take.
 #'
@@ -81,7 +86,8 @@ get_R.default <- function(x, ...) {
 #'   force of infection should be computed. This does not change the estimation
 #'   of the reproduction number, but will affect projections.
 
-get_R.integer <- function(x, disease = "ebola", si_mean = NULL, si_sd = NULL,
+get_R.integer <- function(x, disease = "ebola", si = NULL,
+                          si_mean = NULL, si_sd = NULL,
                           max_R = 5, days = 30, ...) {
   dates <- seq_along(x)
   last_day <- max(dates) + days
@@ -92,7 +98,7 @@ get_R.integer <- function(x, disease = "ebola", si_mean = NULL, si_sd = NULL,
 
   ## The serial interval is a discretised Gamma distribution. We ensure w(0) = 0
   ## so that a case cannot contribute to its own infectiousness.
-
+  if (is.null(si)) {
   if (is.null(si_mean) && disease == "ebola") {
     si_mean <- 15.3
   }
@@ -108,6 +114,12 @@ get_R.integer <- function(x, disease = "ebola", si_mean = NULL, si_sd = NULL,
   si_full <- distcrete::distcrete("gamma", shape = si_param$shape,
                              scale = si_param$scale,
                              interval = 1L, w = 0L)
+  } else {
+      if (!inherits(si, "distcrete")) {
+          stop("'si' must be a distcrete object")
+      }
+      si_full <- si
+  }
   si <- si_full$d(seq_len(MAX_T))
   si[1] <- 0
   si <- si / sum(si)
