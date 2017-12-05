@@ -71,7 +71,7 @@ if (require(incidence)) {
  x
  as.data.frame(x)
  plot(x)
- res <- get_R(x)
+ res <- get_R(x, disease = "ebola")
  res
  plot(res)
  plot(res, "lambdas")

@@ -21,7 +21,7 @@ values of R are directly proportional to their likelihood.
 if (require(incidence)) {
  x <- incidence(c(1, 5, 5, 12, 45, 65))
  plot(x)
- res <- get_R(x)
+ res <- get_R(x, disease = "ebola")
  res
  plot(res)
 

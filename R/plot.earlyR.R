@@ -22,7 +22,22 @@
 #'
 #' @param ... Further arguments to be passed to other methods (not used).
 #'
-
+#' if (require(incidence)) {
+#'
+#' ## example: onsets on days 1, 5, 6 and 12; estimation on day 24
+#' onset <- c(1, 5, 6, 12)
+#' x <- incidence(onset, last_date = 24)
+#' x
+#'
+#' res <- get_R(x, disease = "ebola")
+#' res
+#' plot(res)
+#' plot(res, "lambdas")
+#' plot(res, "lambdas", scaling = 5)
+#' points(onset, 1:4, cex = 3, pch = 20)
+#'
+#' }
+#
 plot.earlyR <- function(x, type = c("R", "lambdas"), scale = 1, ...) {
 
   type <- match.arg(type)

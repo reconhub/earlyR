@@ -26,6 +26,17 @@
 #'     \code{as.data.frame} to double-check that the epicurve includes the last
 #'     'zeros'.
 #'
+#' @return A list with the \code{earlyR} class, containing the following
+#'     components:
+#' \itemize{
+#' \item
+#' 
+#' \item
+#' 
+#' \item
+#' 
+#' }
+#' 
 #' @examples
 #'
 #' if (require(incidence)) {
@@ -35,7 +46,7 @@
 #'  x
 #'  as.data.frame(x)
 #'  plot(x)
-#'  res <- get_R(x)
+#'  res <- get_R(x, disease = "ebola")
 #'  res
 #'  plot(res)
 #'  plot(res, "lambdas")
@@ -186,7 +197,8 @@ get_R.integer <- function(x, disease = NULL, si = NULL,
 #' @aliases get_R.numeric
 
 get_R.numeric <- function(x, ...) {
-  get_R(as.integer(x), ...)
+    out <- get_R(as.integer(x), ...)
+    out$incidence <- x
 }
 
 
@@ -219,5 +231,6 @@ get_R.incidence <- function(x, ...) {
     out$dates <- min(x$dates) - 1 + out$dates
   }
 
+  out$incidence <- x
   return(out)
 }

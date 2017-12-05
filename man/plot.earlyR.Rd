@@ -19,7 +19,23 @@ the force of infection over time.}
 \item{scale}{A numeric value indicating the scaling factor for lambdas on the
 'y' axis.}
 
-\item{...}{Further arguments to be passed to other methods (not used).}
+\item{...}{Further arguments to be passed to other methods (not used).
+
+if (require(incidence)) {
+
+## example: onsets on days 1, 5, 6 and 12; estimation on day 24
+onset <- c(1, 5, 6, 12)
+x <- incidence(onset, last_date = 24)
+x
+
+res <- get_R(x, disease = "ebola")
+res
+plot(res)
+plot(res, "lambdas")
+plot(res, "lambdas", scaling = 5)
+points(onset, 1:4, cex = 3, pch = 20)
+
+}}
 }
 \description{
 These functions are designed for plotting \code{earlyR} objects, output by
