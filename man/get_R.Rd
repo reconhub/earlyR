@@ -12,8 +12,8 @@ get_R(x, ...)
 
 \method{get_R}{default}(x, ...)
 
-\method{get_R}{integer}(x, disease = "ebola", si = NULL, si_mean = NULL,
-  si_sd = NULL, max_R = 5, days = 30, ...)
+\method{get_R}{integer}(x, disease = NULL, si = NULL, si_mean = NULL,
+  si_sd = NULL, max_R = 10, days = 30, ...)
 
 \method{get_R}{numeric}(x, ...)
 
@@ -23,13 +23,15 @@ get_R(x, ...)
 \item{x}{The daily incidence to be used for inferring the reproduction
 number. Input can be an \code{incidence} object, as output by the package
 \code{incidence}, or a vector of numbers indicating daily number of
-cases. Note that 'zero' incidence should be reported as well (see details).}
+cases. Note that 'zero' incidence should be reported as well (see
+details).}
 
 \item{...}{Further arguments to be passed to the methods.}
 
 \item{disease}{A character string indicating the name of the disease
 studied. If provided, then \code{si_mean} and \code{si_sd} will be filled
-in automatically using value from the literature.}
+in automatically using value from the literature. Accepted values are:
+"ebola".}
 
 \item{si}{A \code{distcrete} object (see package \code{distcrete}) containing
 the discretized distribution of the serial interval.}
@@ -43,8 +45,8 @@ distribution. Ignored if \code{si} is provided.}
 \item{max_R}{The maximum value the reproduction number can take.}
 
 \item{days}{The number of days after the last incidence date for which the
-force of infection should be computed. This does not change the estimation
-of the reproduction number, but will affect projections.}
+force of infection should be computed. This does not change the
+estimation of the reproduction number, but will affect projections.}
 }
 \description{
 This function estimates the (most of the time, 'basic') reproduction number
