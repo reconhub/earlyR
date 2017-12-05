@@ -15,6 +15,7 @@ test_that("Test against reference results", {
     R_1 <- get_R(i, si = si)
     expect_equal_to_reference(R_1, file = "rds/R_1.rds")
 
+    expect_identical(i, R_1$incidence)
 })
 
 

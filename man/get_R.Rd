@@ -48,6 +48,28 @@ distribution. Ignored if \code{si} is provided.}
 force of infection should be computed. This does not change the
 estimation of the reproduction number, but will affect projections.}
 }
+\value{
+A list with the \code{earlyR} class, containing the following
+    components:
+\itemize{
+\item \code{$incidence}: the input incidence, in its original format
+
+\item \code{$R_grid}: the grid of R values for which the likelihood has been
+computed.
+
+\item \code{$R_like}: the values of likelihood corresponding to the
+\code{$R_grid}
+
+\item \code{$R_ml}: the maximum likelihood estimate of R
+
+\item \code{$dates}: the dates for which infectiousness has been computed
+
+\item \code{$lambdas}: the corresponding values of force of infection
+
+\item \code{$si}: the serial interval, stored as a \code{distcrete} object
+
+}
+}
 \description{
 This function estimates the (most of the time, 'basic') reproduction number
 (R) using i) the known distribution of the Serial Interval (delay between
