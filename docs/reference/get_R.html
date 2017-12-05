@@ -31,8 +31,6 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
-
-
   </head>
 
   <body>
@@ -78,7 +76,7 @@
     </div>
 
     
-    <p>This function estimates the (most of the time, 'basic') reproduction number
+    <p>This function estimates the (most of the time, &#39;basic&#39;) reproduction number
 (R) using i) the known distribution of the Serial Interval (delay between
 primary to secondary onset) and ii) incidence data.</p>
     
@@ -89,8 +87,8 @@ primary to secondary onset) and ii) incidence data.</p>
 <span class='fu'>get_R</span>(<span class='no'>x</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for integer</span>
-<span class='fu'>get_R</span>(<span class='no'>x</span>, <span class='kw'>disease</span> <span class='kw'>=</span> <span class='st'>"ebola"</span>, <span class='kw'>si_mean</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>si_sd</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>max_R</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>days</span> <span class='kw'>=</span> <span class='fl'>30</span>, <span class='no'>...</span>)
+<span class='fu'>get_R</span>(<span class='no'>x</span>, <span class='kw'>disease</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>si</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>si_mean</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>si_sd</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>max_R</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>days</span> <span class='kw'>=</span> <span class='fl'>30</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for numeric</span>
 <span class='fu'>get_R</span>(<span class='no'>x</span>, <span class='no'>...</span>)
@@ -99,54 +97,69 @@ primary to secondary onset) and ii) incidence data.</p>
 <span class='fu'>get_R</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>x</th>
-      <td><p>The daily incidence to be used for inferring the reproduction
+    <dl class="dl-horizontal">
+      <dt>x</dt>
+      <dd>The daily incidence to be used for inferring the reproduction
 number. Input can be an <code>incidence</code> object, as output by the package
 <code>incidence</code>, or a vector of numbers indicating daily number of
-cases. Note that 'zero' incidence should be reported as well (see details).</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Further arguments to be passed to the methods.</p></td>
-    </tr>
-    <tr>
-      <th>disease</th>
-      <td><p>A character string indicating the name of the disease
+cases. Note that &#39;zero&#39; incidence should be reported as well (see
+details).</dd>
+      <dt>...</dt>
+      <dd>Further arguments to be passed to the methods.</dd>
+      <dt>disease</dt>
+      <dd>A character string indicating the name of the disease
 studied. If provided, then <code>si_mean</code> and <code>si_sd</code> will be filled
-in automatically using value from the literature.</p></td>
-    </tr>
-    <tr>
-      <th>si_mean</th>
-      <td><p>The mean of the serial interval distribution.</p></td>
-    </tr>
-    <tr>
-      <th>si_sd</th>
-      <td><p>The standard deviation of the serial interval distribution.</p></td>
-    </tr>
-    <tr>
-      <th>max_R</th>
-      <td><p>The maximum value the reproduction number can take.</p></td>
-    </tr>
-    <tr>
-      <th>days</th>
-      <td><p>The number of days after the last incidence date for which the
-force of infection should be computed. This does not change the estimation
-of the reproduction number, but will affect projections.</p></td>
-    </tr>
-    </table>
+in automatically using value from the literature. Accepted values are:
+&quot;ebola&quot;.</dd>
+      <dt>si</dt>
+      <dd>A <code>distcrete</code> object (see package <code>distcrete</code>) containing
+the discretized distribution of the serial interval.</dd>
+      <dt>si_mean</dt>
+      <dd>The mean of the serial interval distribution. Ignored if
+<code>si</code> is provided.</dd>
+      <dt>si_sd</dt>
+      <dd>The standard deviation of the serial interval
+distribution. Ignored if <code>si</code> is provided.</dd>
+      <dt>max_R</dt>
+      <dd>The maximum value the reproduction number can take.</dd>
+      <dt>days</dt>
+      <dd>The number of days after the last incidence date for which the
+force of infection should be computed. This does not change the
+estimation of the reproduction number, but will affect projections.</dd>
+    </dl>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A list with the <code>earlyR</code> class, containing the following
+    components:
+<ul>
+<li> <code>$incidence</code>: the input incidence, in its original format</p>
+    <p></li>
+<li> <code>$R_grid</code>: the grid of R values for which the likelihood has been
+computed.</p>
+    <p></li>
+<li> <code>$R_like</code>: the values of likelihood corresponding to the
+<code>$R_grid</code></p>
+    <p></li>
+<li> <code>$R_ml</code>: the maximum likelihood estimate of R</p>
+    <p></li>
+<li> <code>$dates</code>: the dates for which infectiousness has been computed</p>
+    <p></li>
+<li> <code>$lambdas</code>: the corresponding values of force of infection</p>
+    <p></li>
+<li> <code>$si</code>: the serial interval, stored as a <code>distcrete</code> object</p>
+    <p></li>
+</ul></p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The estimation of R relies on all available incidence data. As such,
-  all zero incidence after the first case should be included in
-  <code>x</code>. When using <code>inidence</code> from the 'incidence' package, make
-  sure you use the argument <code>last_date</code> to indicate where the epicurve
-  stops, otherwise the curve is stopped after the last case. Use
-  <code>as.data.frame</code> to double-check that the epicurve includes the last
-  'zeros'.</p>
+    all zero incidence after the first case should be included in
+    <code>x</code>. When using <code>inidence</code> from the &#39;incidence&#39; package, make
+    sure you use the argument <code>last_date</code> to indicate where the epicurve
+    stops, otherwise the curve is stopped after the last case. Use
+    <code>as.data.frame</code> to double-check that the epicurve includes the last
+    &#39;zeros&#39;.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -158,7 +171,7 @@ of the reproduction number, but will affect projections.</p></td>
  <span class='no'>x</span>
  <span class='fu'>as.data.frame</span>(<span class='no'>x</span>)
  <span class='fu'>plot</span>(<span class='no'>x</span>)
- <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>get_R</span>(<span class='no'>x</span>)
+ <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>get_R</span>(<span class='no'>x</span>, <span class='kw'>disease</span> <span class='kw'>=</span> <span class='st'>"ebola"</span>)
  <span class='no'>res</span>
  <span class='fu'>plot</span>(<span class='no'>res</span>)
  <span class='fu'>plot</span>(<span class='no'>res</span>, <span class='st'>"lambdas"</span>)
@@ -171,6 +184,8 @@ of the reproduction number, but will affect projections.</p></td>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
+      <li><a href="#value">Value</a></li>
+
       <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>

@@ -31,8 +31,6 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
-
-
   </head>
 
   <body>
@@ -91,28 +89,35 @@ values, or the force of infection over time (see argument <code>type</code>). Fo
 <span class='fu'>points</span>(<span class='no'>x</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>x</th>
-      <td><p>A <code>earlyR</code> object.</p></td>
-    </tr>
-    <tr>
-      <th>type</th>
-      <td><p>The type of graphic to be generated, matching either "R" or
-"lamdbas"; "R" will plot the likelihood of R values; "lambdas" will plot
-the force of infection over time.</p></td>
-    </tr>
-    <tr>
-      <th>scale</th>
-      <td><p>A numeric value indicating the scaling factor for lambdas on the
-'y' axis.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Further arguments to be passed to other methods (not used).</p></td>
-    </tr>
-    </table>
+    <dl class="dl-horizontal">
+      <dt>x</dt>
+      <dd>A <code>earlyR</code> object.</dd>
+      <dt>type</dt>
+      <dd>The type of graphic to be generated, matching either &quot;R&quot; or
+&quot;lamdbas&quot;; &quot;R&quot; will plot the likelihood of R values; &quot;lambdas&quot; will plot
+the force of infection over time.</dd>
+      <dt>scale</dt>
+      <dd>A numeric value indicating the scaling factor for lambdas on the
+&#39;y&#39; axis.</dd>
+      <dt>...</dt>
+      <dd>Further arguments to be passed to other methods (not used).
+
+if (require(incidence)) 
+
+## example: onsets on days 1, 5, 6 and 12; estimation on day 24
+onset &lt;- c(1, 5, 6, 12)
+x &lt;- incidence(onset, last_date = 24)
+x
+
+res &lt;- get_R(x, disease = &quot;ebola&quot;)
+res
+plot(res)
+plot(res, &quot;lambdas&quot;)
+plot(res, &quot;lambdas&quot;, scaling = 5)
+points(onset, 1:4, cex = 3, pch = 20)
+
+</dd>
+    </dl>
     
 
   </div>
