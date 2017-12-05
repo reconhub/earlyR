@@ -10,7 +10,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: stats, distcrete, EpiEstim, epitrix
-Suggests: testthat, vdiffr, roxygen2, incidence, knitr
+Suggests: testthat, vdiffr, roxygen2, incidence, knitr, projections
 RoxygenNote: 6.0.1
 URL: http://www.repidemicsconsortium.org/earlyR
 BugReports: https://github.com/reconhub/earlyR/issues
