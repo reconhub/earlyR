@@ -1,6 +1,6 @@
 Package: earlyR
 Title: Estimation of Transmissibility in the Early Stages of a Disease Outbreak
-Version: 0.1.0
+Version: 0.0.1
 Authors@R: c(person("Thibaut", "Jombart", email = "thibautjombart@gmail.com", role = c("aut", "cre")),
              person("Anne", "Cori", email = "a.cori@imperial.ac.uk", role = c("aut")),
 	     person("Pierre", "Nouvellet", email = "p.nouvellet@imperial.ac.uk", role = c("aut")))

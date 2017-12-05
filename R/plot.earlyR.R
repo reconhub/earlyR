@@ -14,11 +14,11 @@
 #' @param x A \code{earlyR} object.
 #'
 #' @param type The type of graphic to be generated, matching either "R" or
-#'   "lamdbas"; "R" will plot the likelihood of R values; "lambdas" will plot
-#'   the force of infection over time.
+#'     "lamdbas"; "R" will plot the likelihood of R values; "lambdas" will plot
+#'     the force of infection over time.
 #'
 #' @param scale A numeric value indicating the scaling factor for lambdas on the
-#'   'y' axis.
+#'     'y' axis.
 #'
 #' @param ... Further arguments to be passed to other methods (not used).
 #'

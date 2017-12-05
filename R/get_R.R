@@ -11,9 +11,10 @@
 #' @rdname get_R
 #'
 #' @param x The daily incidence to be used for inferring the reproduction
-#'   number. Input can be an \code{incidence} object, as output by the package
-#'   \code{incidence}, or a vector of numbers indicating daily number of
-#'   cases. Note that 'zero' incidence should be reported as well (see details).
+#'     number. Input can be an \code{incidence} object, as output by the package
+#'     \code{incidence}, or a vector of numbers indicating daily number of
+#'     cases. Note that 'zero' incidence should be reported as well (see
+#'     details).
 #'
 #' @param ... Further arguments to be passed to the methods.
 #'
@@ -53,10 +54,11 @@ get_R <- function(x, ...) {
 
 #' @export
 #' @rdname get_R
+#' @aliases get_R.default
 
 get_R.default <- function(x, ...) {
   class <- paste(class(x), collapse = ", ")
-  stop("No method for objects of class", class)
+  stop("No method for objects of class ", class)
 }
 
 
@@ -66,10 +68,12 @@ get_R.default <- function(x, ...) {
 
 #' @export
 #' @rdname get_R
-#'
+#' @aliases get_R.integer
+
 #' @param disease A character string indicating the name of the disease
-#'   studied. If provided, then \code{si_mean} and \code{si_sd} will be filled
-#'   in automatically using value from the literature.
+#'     studied. If provided, then \code{si_mean} and \code{si_sd} will be filled
+#'     in automatically using value from the literature. Accepted values are:
+#'     "ebola".
 #'
 #' @param si A \code{distcrete} object (see package \code{distcrete}) containing
 #'     the discretized distribution of the serial interval.
@@ -83,41 +87,57 @@ get_R.default <- function(x, ...) {
 #' @param max_R The maximum value the reproduction number can take.
 #'
 #' @param days The number of days after the last incidence date for which the
-#'   force of infection should be computed. This does not change the estimation
-#'   of the reproduction number, but will affect projections.
+#'     force of infection should be computed. This does not change the
+#'     estimation of the reproduction number, but will affect projections.
 
-get_R.integer <- function(x, disease = "ebola", si = NULL,
+get_R.integer <- function(x, disease = NULL, si = NULL,
                           si_mean = NULL, si_sd = NULL,
-                          max_R = 5, days = 30, ...) {
+                          max_R = 10, days = 30, ...) {
   dates <- seq_along(x)
   last_day <- max(dates) + days
 
-  disease <- tolower(disease)
-  disease <- match.arg(disease)
+  if (is.null(disease)) {
+      disease <- "null"
+  } else {
+      disease <- tolower(disease)
+      disease <- match.arg(disease, c("ebola"))
+  }
 
+  
+  ## maximum numbers of time steps the distribution of the serial interval is
+  ## discretized for
+  
+  MAX_T <- 1000 
 
+  
   ## The serial interval is a discretised Gamma distribution. We ensure w(0) = 0
   ## so that a case cannot contribute to its own infectiousness.
+
   if (is.null(si)) {
-  if (is.null(si_mean) && disease == "ebola") {
-    si_mean <- 15.3
-  }
-  if (is.null(si_sd) && disease == "ebola") {
-    si_sd <- 9.3
-  }
-  if (is.null(si_mean)) stop("si_mean is missing")
-  if (is.null(si_sd)) stop("si_sd is missing")
+      if (is.null(si_mean) && disease == "ebola") {
+          si_mean <- 15.3
+      }
+      if (is.null(si_sd) && disease == "ebola") {
+          si_sd <- 9.3
+      }
+      if (is.null(si_mean)) stop("si_mean is missing")
+      if (is.null(si_sd)) stop("si_sd is missing")
 
-  si_param <- epitrix::gamma_mucv2shapescale(si_mean, si_sd / si_mean)
+      si_param <- epitrix::gamma_mucv2shapescale(si_mean, si_sd / si_mean)
 
-  MAX_T <- 1000
-  si_full <- distcrete::distcrete("gamma", shape = si_param$shape,
-                             scale = si_param$scale,
-                             interval = 1L, w = 0L)
+      si_full <- distcrete::distcrete("gamma", shape = si_param$shape,
+                                      scale = si_param$scale,
+                                      interval = 1L, w = 0L)
   } else {
       if (!inherits(si, "distcrete")) {
           stop("'si' must be a distcrete object")
       }
+      if (as.integer(si$interval) != 1L) {
+          msg <- sprintf("interval used in si is not 1 day, but %d)",
+                         si$interval)
+          stop(msg)
+      }
+
       si_full <- si
   }
   si <- si_full$d(seq_len(MAX_T))
@@ -163,6 +183,7 @@ get_R.integer <- function(x, disease = "ebola", si = NULL,
 
 #' @export
 #' @rdname get_R
+#' @aliases get_R.numeric
 
 get_R.numeric <- function(x, ...) {
   get_R(as.integer(x), ...)
@@ -175,11 +196,12 @@ get_R.numeric <- function(x, ...) {
 
 #' @export
 #' @rdname get_R
+#' @aliases get_R.incidence
 
 get_R.incidence <- function(x, ...) {
 
   if (as.integer(x$interval) != 1L) {
-    msg <- sprintf("daily incidence needed - interval is %d days",
+    msg <- sprintf("daily incidence needed, but interval is %d days",
                    x$interval)
     stop(msg)
   }

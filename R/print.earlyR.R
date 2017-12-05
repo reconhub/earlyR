@@ -9,7 +9,7 @@
 #' @param x A \code{earlyR} object.
 #'
 #' @param ... further parameters to be passed to other methods (currently not
-#' used)
+#'     used)
 #'
 print.earlyR <- function(x, ...){
     cat("\n/// Early estimate of reproduction number (R) //")

@@ -1,7 +1,8 @@
 #' Get a sample of plausible Reproduction Numbers
 #'
 #' This function derives a sample of plausible R values from an \code{earlyR}
-#' object (as returned by \code{\link{get_R}}).
+#' object (as returned by \code{\link{get_R}}). The probability of each returned
+#' values of R are directly proportional to their likelihood.
 #'
 #'
 #' @author Thibaut Jombart \email{thibautjombart@@gmail.com}
