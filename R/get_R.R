@@ -209,6 +209,7 @@ get_R.integer <- function(x, disease = NULL, si = NULL,
 get_R.numeric <- function(x, ...) {
     out <- get_R(as.integer(x), ...)
     out$incidence <- x
+    return(out)
 }
 
 
