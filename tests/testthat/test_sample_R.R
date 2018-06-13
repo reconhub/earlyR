@@ -13,9 +13,12 @@ test_that("Test against reference results", {
                     shape = 1.5,
                     scale = 2, w = 0)
     R_1 <- get_R(i, si = si)
-    set.seed(1)
-    samp_1 <- sample_R(R_1)
-    expect_equal_to_reference(samp_1, file = "rds/samp_1.rds")
+
+    samp_1 <- sample_R(R_1, n = 1e4)
+
+    expect_length(samp_1, 1e4)
+    expect_true(abs(round(mean(samp_1), 1) - 3.3) < 0.1)
+    expect_true(abs(round(sd(samp_1), 1) - 2.2) < 0.1)
 
 })
 
