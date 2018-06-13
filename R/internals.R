@@ -50,3 +50,15 @@
 ##   rowSums(all_lambdas)
 ## }
 
+
+
+
+## Sanitize very low log-likelihood values and put them back on their original
+## scale, summing to 1.
+
+loglike_to_density <- function(x) {
+  out <- x / abs(max(x, na.rm = TRUE))
+  out <- exp(out)
+  out <- out / sum(out)
+  out
+}
