@@ -30,23 +30,23 @@
 #'     components:
 #' \itemize{
 #' \item \code{$incidence}: the input incidence, in its original format
-#' 
+#'
 #' \item \code{$R_grid}: the grid of R values for which the likelihood has been
 #' computed.
-#' 
+#'
 #' \item \code{$R_like}: the values of likelihood corresponding to the
 #' \code{$R_grid}
-#' 
+#'
 #' \item \code{$R_ml}: the maximum likelihood estimate of R
-#' 
+#'
 #' \item \code{$dates}: the dates for which infectiousness has been computed
-#' 
+#'
 #' \item \code{$lambdas}: the corresponding values of force of infection
-#' 
+#'
 #' \item \code{$si}: the serial interval, stored as a \code{distcrete} object
-#' 
+#'
 #' }
-#' 
+#'
 #' @examples
 #'
 #' if (require(incidence)) {
@@ -124,13 +124,13 @@ get_R.integer <- function(x, disease = NULL, si = NULL,
       disease <- match.arg(disease, c("ebola"))
   }
 
-  
+
   ## maximum numbers of time steps the distribution of the serial interval is
   ## discretized for
-  
-  MAX_T <- 1000 
 
-  
+  MAX_T <- 1000
+
+
   ## The serial interval is a discretised Gamma distribution. We ensure w(0) = 0
   ## so that a case cannot contribute to its own infectiousness.
 
@@ -176,14 +176,13 @@ get_R.integer <- function(x, disease = NULL, si = NULL,
     sum(stats::dpois(x[-1], lambda = R * x_lambdas, log = TRUE))
   }
 
-  like <- function(R) exp(loglike(R))
 
   GRID_SIZE <- 1000
 
   R_grid <- seq(0, max_R, length.out = GRID_SIZE)
-  R_like <- vapply(R_grid, like, numeric(1))
+  R_loglike <- vapply(R_grid, loglike, numeric(1))
+  R_like <- loglike_to_density(R_loglike)
   R_ml <- R_grid[which.max(R_like)]
-
 
   out <- list(incidence = x,
               R_grid = R_grid,

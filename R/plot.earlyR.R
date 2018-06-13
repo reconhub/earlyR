@@ -14,11 +14,13 @@
 #' @param x A \code{earlyR} object.
 #'
 #' @param type The type of graphic to be generated, matching either "R" or
-#'     "lamdbas"; "R" will plot the likelihood of R values; "lambdas" will plot
-#'     the force of infection over time.
+#'   "lamdbas"; "R" will plot the likelihood of R values; "lambdas" will plot
+#'   the force of infection over time.
 #'
 #' @param scale A numeric value indicating the scaling factor for lambdas on the
-#'     'y' axis.
+#'   'y' axis.
+#'
+#' @param lambda_color A color to be used for plotting the lambdas.
 #'
 #' @param ... Further arguments to be passed to other methods (not used).
 #'
@@ -38,30 +40,31 @@
 #'
 #' }
 #
-plot.earlyR <- function(x, type = c("R", "lambdas"), scale = 1, ...) {
+plot.earlyR <- function(x, type = c("R", "lambdas"), scale = 1,
+                        lambda_color = "#990033", ...) {
 
   type <- match.arg(type)
   if (type == "R") {
     graphics::plot(x$R_grid, x$R_like, type = "l", lwd = 2,
-         xlab = "Reproduction number",
-         ylab = "Likelihood",
-         yaxt = "n", ...)
+                   xlab = "Reproduction number",
+                   ylab = "Likelihood",
+                   yaxt = "n", ...)
     graphics::segments(x$R_ml, 0, x$R_ml, max(x$R_like),
-             col = "blue", lwd = 2)
+                       col = "blue", lwd = 2)
     graphics::points(x$R_ml, max(x$R_like), pch = 20, cex = 2)
     graphics::text(x$R_ml + .2 * max(x$R_grid),
-         max(x$R_like), pch = 20, cex = 1.5,
-         label = paste("R =", round(x$R_ml,3)))
+                   max(x$R_like), pch = 20, cex = 1.5,
+                   label = paste("R =", round(x$R_ml,3)))
   } else {
 
     lambdas <- scale * x$lambdas / max(x$lambdas, na.rm = TRUE)
 
     graphics::plot(x$dates, lambdas, type = "h", lwd = 5,
-                   col = grDevices::heat.colors(length(x$dates)),
+                   col = lambda_color,
                    lend = 1, xlab = "Date",
                    ylab = "Infectiousness (lambdas)",
                    main = "Global force of infection",
-         ...)
+                   ...)
   }
 }
 
@@ -74,11 +77,11 @@ plot.earlyR <- function(x, type = c("R", "lambdas"), scale = 1, ...) {
 #'
 #' @rdname plot.earlyR
 
-points.earlyR <- function(x, scale = 1, ...) {
+points.earlyR <- function(x, scale = 1, lambda_color = "#990033", ...) {
   lambdas <- scale * x$lambdas / max(x$lambdas, na.rm = TRUE)
 
   graphics::points(x$dates,  lambdas, type = "h", lwd = 5,
-                   col = grDevices::heat.colors(length(x$dates)), lend = 1,
+                   col = lambda_color, lend = 1,
                    xlab = "Date", ylab = "Infectiousness (lambdas)",
                    main = "Global force of infection", ...)
 

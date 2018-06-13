@@ -5,9 +5,10 @@
 \alias{points.earlyR}
 \title{Plot earlyR objects}
 \usage{
-\method{plot}{earlyR}(x, type = c("R", "lambdas"), scale = 1, ...)
+\method{plot}{earlyR}(x, type = c("R", "lambdas"), scale = 1,
+  lambda_color = "#990033", ...)
 
-\method{points}{earlyR}(x, scale = 1, ...)
+\method{points}{earlyR}(x, scale = 1, lambda_color = "#990033", ...)
 }
 \arguments{
 \item{x}{A \code{earlyR} object.}
@@ -18,6 +19,8 @@ the force of infection over time.}
 
 \item{scale}{A numeric value indicating the scaling factor for lambdas on the
 'y' axis.}
+
+\item{lambda_color}{A color to be used for plotting the lambdas.}
 
 \item{...}{Further arguments to be passed to other methods (not used).
 
