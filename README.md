@@ -101,6 +101,7 @@ i
 ## $dates: 46 dates marking the left-side of bins
 ## $interval: 1 day
 ## $timespan: 46 days
+## $cumulative: FALSE
 ```
 
 ```r
@@ -178,7 +179,7 @@ summary(R_val) # basic stats
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  0.3453  0.8646  1.0961  1.1368  1.3664  2.5225
+##  0.2202  0.8784  1.1011  1.1589  1.4014  2.8228
 ```
 
 ```r
@@ -187,7 +188,7 @@ quantile(R_val) # quartiles
 
 ```
 ##        0%       25%       50%       75%      100% 
-## 0.3453453 0.8646146 1.0960961 1.3663664 2.5225225
+## 0.2202202 0.8783784 1.1011011 1.4014014 2.8228228
 ```
 
 ```r
@@ -196,7 +197,7 @@ quantile(R_val, c(0.025, 0.975)) # 95% credibility interval
 
 ```
 ##      2.5%     97.5% 
-## 0.5254004 2.0021271
+## 0.5500501 2.0022523
 ```
 
 ```r
