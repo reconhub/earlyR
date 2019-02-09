@@ -167,7 +167,7 @@ get_R.integer <- function(x, disease = NULL, si = NULL,
 
   x_with_tail <- rep(0, last_day)
   x_with_tail[dates] <- x
-  all_lambdas <- EpiEstim::OverallInfectivity(x_with_tail, si)[-1]
+  all_lambdas <- EpiEstim::overall_infectivity(x_with_tail, si)[-1]
   dates_lambdas <- seq_along(all_lambdas) + 1
   x_lambdas <- all_lambdas[dates]
 

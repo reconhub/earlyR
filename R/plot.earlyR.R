@@ -45,16 +45,26 @@ plot.earlyR <- function(x, type = c("R", "lambdas"), scale = 1,
 
   type <- match.arg(type)
   if (type == "R") {
-    graphics::plot(x$R_grid, x$R_like, type = "l", lwd = 2,
-                   xlab = "Reproduction number",
-                   ylab = "Likelihood",
-                   yaxt = "n", ...)
-    graphics::segments(x$R_ml, 0, x$R_ml, max(x$R_like),
-                       col = "blue", lwd = 2)
-    graphics::points(x$R_ml, max(x$R_like), pch = 20, cex = 2)
-    graphics::text(x$R_ml + .2 * max(x$R_grid),
-                   max(x$R_like), pch = 20, cex = 1.5,
-                   label = paste("R =", round(x$R_ml,3)))
+    df <- data.frame(R = x$R_grid, likelihood = x$R_like)
+    df_ml <- data.frame(R_ml = x$R_ml, max_like = max(x$R_like))
+    R_ml_label <- paste("R (MLE) =", round(x$R_ml, 2))
+    
+    
+    out <- ggplot2::ggplot(df, ggplot2::aes(x = R, y = likelihood)) +
+      ggplot2::geom_line() +
+      ggplot2::geom_segment(data = df_ml,
+                            ggplot2::aes(x = R_ml,
+                                         0,
+                                         xend = R_ml,
+                                         yend = max_like),
+                            linetype = 2) +
+      ggplot2::geom_label(data = df_ml,
+                          ggplot2::aes(x = R_ml,
+                                       y = max_like * 1.05,
+                                       label = R_ml_label)) +
+      ggplot2::labs(x = "reproduction number (R)",
+                    title = "Likelihood distribution of R")
+    
   } else {
 
     lambdas <- scale * x$lambdas / max(x$lambdas, na.rm = TRUE)
@@ -66,6 +76,8 @@ plot.earlyR <- function(x, type = c("R", "lambdas"), scale = 1,
                    main = "Global force of infection",
                    ...)
   }
+
+  out
 }
 
 
