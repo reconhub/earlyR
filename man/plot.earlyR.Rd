@@ -30,6 +30,7 @@ likelihood estimate of *R* multiplied by the number of infectious cases}
 \value{
 A `ggplot2` object.
 
+
 if (require(incidence)) {
 
 ## example: onsets on days 1, 5, 6 and 12; estimation on day 24

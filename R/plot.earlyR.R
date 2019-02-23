@@ -30,6 +30,7 @@
 #'
 #' @return A `ggplot2` object.
 #'
+#'
 #' if (require(incidence)) {
 #'
 #' ## example: onsets on days 1, 5, 6 and 12; estimation on day 24
