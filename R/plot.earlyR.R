@@ -43,7 +43,7 @@
 #'
 #' }
                                         #
-plot.earlyR <- function(x, type = c("R", "lambdas"), scale = 1,
+plot.earlyR <- function(x, type = c("R", "lambdas"), scale = "ml",
                         lambda_color = "#990033", ...) {
 
   type <- match.arg(type)
@@ -71,15 +71,26 @@ plot.earlyR <- function(x, type = c("R", "lambdas"), scale = 1,
 
   } else {
 
-    lambdas <- scale * x$lambdas / max(x$lambdas, na.rm = TRUE)
-    df_plot <- data.frame(date = x$dates, lambda = x$lambdas)
+
+    ## the scaling value is defined as the sum of all the lambdas weighted by
+    ## individual infectiousness; the default value is "ml", in which case the
+    ## scaling value is the ML estimate of R multiplied by the number of cases.
+    
+    if (tolower(scale) == "ml") {
+      scale <- x$R_ml * x$incidence$n
+      ylab <- "Force of infection (ML estimate of expected daily cases)"
+    } else {
+      ylab <- "Force of infection"
+    }
+    lambdas <- scale * (x$lambdas / sum(x$lambdas, na.rm = TRUE))
+    df_plot <- data.frame(date = x$dates, lambda = lambdas)
 
     out <- ggplot2::ggplot(df_plot, ggplot2::aes(x = date, y = lambda)) +
       ggplot2::geom_bar(stat = "identity",
                         fill = lambda_color) +
-      ggplot2::labs(title = "Relative force of infection over time",
+      ggplot2::labs(title = "Force of infection over time",
                     x = "date",
-                    y = "Infectiousness (lambda)")
+                    y = ylab)
         
   }
 
