@@ -39,11 +39,12 @@
 #' points(onset, 1:4, cex = 3, pch = 20)
 #'
 #' }
-#
+                                        #
 plot.earlyR <- function(x, type = c("R", "lambdas"), scale = 1,
                         lambda_color = "#990033", ...) {
 
   type <- match.arg(type)
+  
   if (type == "R") {
     df <- data.frame(R = x$R_grid, likelihood = x$R_like)
     df_ml <- data.frame(R_ml = x$R_ml, max_like = max(x$R_like))
@@ -64,7 +65,8 @@ plot.earlyR <- function(x, type = c("R", "lambdas"), scale = 1,
                                        label = R_ml_label)) +
       ggplot2::labs(x = "reproduction number (R)",
                     title = "Likelihood distribution of R")
-    
+
+    return(out)
   } else {
 
     lambdas <- scale * x$lambdas / max(x$lambdas, na.rm = TRUE)
@@ -77,7 +79,7 @@ plot.earlyR <- function(x, type = c("R", "lambdas"), scale = 1,
                    ...)
   }
 
-  out
+  
 }
 
 
