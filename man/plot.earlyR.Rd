@@ -22,7 +22,11 @@ the force of infection over time.}
 
 \item{lambda_color}{A color to be used for plotting the lambdas.}
 
-\item{...}{Further arguments to be passed to other methods (not used).
+\item{...}{Further arguments to be passed to other methods (currently not
+used).}
+}
+\value{
+A `ggplot2` object.
 
 if (require(incidence)) {
 
@@ -38,7 +42,7 @@ plot(res, "lambdas")
 plot(res, "lambdas", scaling = 5)
 points(onset, 1:4, cex = 3, pch = 20)
 
-}}
+}
 }
 \description{
 These functions are designed for plotting \code{earlyR} objects, output by

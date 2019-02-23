@@ -22,7 +22,10 @@
 #'
 #' @param lambda_color A color to be used for plotting the lambdas.
 #'
-#' @param ... Further arguments to be passed to other methods (not used).
+#' @param ... Further arguments to be passed to other methods (currently not
+#'   used).
+#'
+#' @return A `ggplot2` object.
 #'
 #' if (require(incidence)) {
 #'
@@ -66,19 +69,21 @@ plot.earlyR <- function(x, type = c("R", "lambdas"), scale = 1,
       ggplot2::labs(x = "reproduction number (R)",
                     title = "Likelihood distribution of R")
 
-    return(out)
   } else {
 
     lambdas <- scale * x$lambdas / max(x$lambdas, na.rm = TRUE)
+    df_plot <- data.frame(date = x$dates, lambda = x$lambdas)
 
-    graphics::plot(x$dates, lambdas, type = "h", lwd = 5,
-                   col = lambda_color,
-                   lend = 1, xlab = "Date",
-                   ylab = "Infectiousness (lambdas)",
-                   main = "Global force of infection",
-                   ...)
+    out <- ggplot2::ggplot(df_plot, ggplot2::aes(x = date, y = lambda)) +
+      ggplot2::geom_bar(stat = "identity",
+                        fill = lambda_color) +
+      ggplot2::labs(title = "Relative force of infection over time",
+                    x = "date",
+                    y = "Infectiousness (lambda)")
+        
   }
 
+  return(out)
   
 }
 
@@ -92,11 +97,5 @@ plot.earlyR <- function(x, type = c("R", "lambdas"), scale = 1,
 #' @rdname plot.earlyR
 
 points.earlyR <- function(x, scale = 1, lambda_color = "#990033", ...) {
-  lambdas <- scale * x$lambdas / max(x$lambdas, na.rm = TRUE)
-
-  graphics::points(x$dates,  lambdas, type = "h", lwd = 5,
-                   col = lambda_color, lend = 1,
-                   xlab = "Date", ylab = "Infectiousness (lambdas)",
-                   main = "Global force of infection", ...)
-
+  plot(x, type = "lambdas", scale = scale, lambda_color = lambda_color, ...)
 }
