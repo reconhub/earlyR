@@ -15,15 +15,18 @@
 #'
 #' @param type The type of graphic to be generated, matching either "R" or
 #'   "lamdbas"; "R" will plot the likelihood of R values; "lambdas" will plot
-#'   the force of infection over time.
+#'   the force of infection over time; see `scale` argument to interprete the
+#'   force of infection.
 #'
-#' @param scale A numeric value indicating the scaling factor for lambdas on the
-#'   'y' axis.
+#' @param scale A numeric value indicating the total number of new cases
+#'   expected over the time period of the lambdas, or a recognised `character`
+#'   string; lambdas will be scaled to correspond to the number of expected
+#'   cases every day; defaults to `ml`, which tells function to use the maximum
+#'   likelihood estimate of *R* multiplied by the number of infectious cases
 #'
-#' @param lambda_color A color to be used for plotting the lambdas.
-#'
-#' @param ... Further arguments to be passed to other methods (currently not
-#'   used).
+#' @param ... Further arguments to be passed to other methods; for the plot of
+#'   *R*, `...` is passed to `ggplot2::geom_line()`; for the plot of *lambdas*,
+#'   `...` is passed to `ggplot2::geom_bar()`.
 #'
 #' @return A `ggplot2` object.
 #'
@@ -38,13 +41,12 @@
 #' res
 #' plot(res)
 #' plot(res, "lambdas")
-#' plot(res, "lambdas", scaling = 5)
+#' plot(res, "lambdas", scaling = 10)
 #' points(onset, 1:4, cex = 3, pch = 20)
 #'
 #' }
                                         #
-plot.earlyR <- function(x, type = c("R", "lambdas"), scale = "ml",
-                        lambda_color = "#990033", ...) {
+plot.earlyR <- function(x, type = c("R", "lambdas"), scale = "ml", ...) {
 
   type <- match.arg(type)
   
@@ -55,7 +57,7 @@ plot.earlyR <- function(x, type = c("R", "lambdas"), scale = "ml",
     
     
     out <- ggplot2::ggplot(df, ggplot2::aes(x = R, y = likelihood)) +
-      ggplot2::geom_line() +
+      ggplot2::geom_line(...) +
       ggplot2::geom_segment(data = df_ml,
                             ggplot2::aes(x = R_ml,
                                          0,
@@ -86,8 +88,7 @@ plot.earlyR <- function(x, type = c("R", "lambdas"), scale = "ml",
     df_plot <- data.frame(date = x$dates, lambda = lambdas)
 
     out <- ggplot2::ggplot(df_plot, ggplot2::aes(x = date, y = lambda)) +
-      ggplot2::geom_bar(stat = "identity",
-                        fill = lambda_color) +
+      ggplot2::geom_bar(stat = "identity", ...) +
       ggplot2::labs(title = "Force of infection over time",
                     x = "date",
                     y = ylab)
@@ -107,6 +108,6 @@ plot.earlyR <- function(x, type = c("R", "lambdas"), scale = "ml",
 #'
 #' @rdname plot.earlyR
 
-points.earlyR <- function(x, scale = 1, lambda_color = "#990033", ...) {
-  plot(x, type = "lambdas", scale = scale, lambda_color = lambda_color, ...)
+points.earlyR <- function(x, scale = 1, ...) {
+  plot(x, type = "lambdas", scale = scale, ...)
 }

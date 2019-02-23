@@ -5,25 +5,27 @@
 \alias{points.earlyR}
 \title{Plot earlyR objects}
 \usage{
-\method{plot}{earlyR}(x, type = c("R", "lambdas"), scale = 1,
-  lambda_color = "#990033", ...)
+\method{plot}{earlyR}(x, type = c("R", "lambdas"), scale = "ml", ...)
 
-\method{points}{earlyR}(x, scale = 1, lambda_color = "#990033", ...)
+\method{points}{earlyR}(x, scale = 1, ...)
 }
 \arguments{
 \item{x}{A \code{earlyR} object.}
 
 \item{type}{The type of graphic to be generated, matching either "R" or
 "lamdbas"; "R" will plot the likelihood of R values; "lambdas" will plot
-the force of infection over time.}
+the force of infection over time; see `scale` argument to interprete the
+force of infection.}
 
-\item{scale}{A numeric value indicating the scaling factor for lambdas on the
-'y' axis.}
+\item{scale}{A numeric value indicating the total number of new cases
+expected over the time period of the lambdas, or a recognised `character`
+string; lambdas will be scaled to correspond to the number of expected
+cases every day; defaults to `ml`, which tells function to use the maximum
+likelihood estimate of *R* multiplied by the number of infectious cases}
 
-\item{lambda_color}{A color to be used for plotting the lambdas.}
-
-\item{...}{Further arguments to be passed to other methods (currently not
-used).}
+\item{...}{Further arguments to be passed to other methods; for the plot of
+*R*, `...` is passed to `ggplot2::geom_line()`; for the plot of *lambdas*,
+`...` is passed to `ggplot2::geom_bar()`.}
 }
 \value{
 A `ggplot2` object.
@@ -39,7 +41,7 @@ res <- get_R(x, disease = "ebola")
 res
 plot(res)
 plot(res, "lambdas")
-plot(res, "lambdas", scaling = 5)
+plot(res, "lambdas", scaling = 10)
 points(onset, 1:4, cex = 3, pch = 20)
 
 }
