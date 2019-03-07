@@ -167,15 +167,28 @@ get_R.integer <- function(x, disease = NULL, si = NULL,
 
   x_with_tail <- rep(0, last_day)
   x_with_tail[dates] <- x
-  all_lambdas <- EpiEstim::overall_infectivity(x_with_tail, si)[-1]
-  dates_lambdas <- seq_along(all_lambdas) + 1
-  x_lambdas <- all_lambdas[dates]
+
+  
+  ## Important note: EpiEstim::overall_infectivity assumes the first case is
+  ## imported, so we need to tweak the data provided to ensure the data passed
+  ## on to the function is the first non-zero case count. If data are all
+  ## 'zero', then only the first data point is ignored.
+
+  if (sum(x_with_tail) == 0) {
+    dates_to_ignore <- 1
+  } else {
+    first_cases <- min(which(x_with_tail > 0))
+    dates_to_ignore <- seq_len(first_cases)
+  }
+  
+  all_lambdas <- EpiEstim::overall_infectivity(x_with_tail, si)
+  dates_lambdas <- seq_along(all_lambdas)
+  x_lambdas <- all_lambdas[-dates_to_ignore]
 
   loglike <- function(R) {
     if (R <= 0 ) return(-Inf)
-    sum(stats::dpois(x[-1], lambda = R * x_lambdas, log = TRUE))
+    sum(stats::dpois(x[-dates_to_ignore], lambda = R * x_lambdas, log = TRUE))
   }
-
 
   GRID_SIZE <- 1000
 
