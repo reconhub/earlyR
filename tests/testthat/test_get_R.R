@@ -43,34 +43,35 @@ test_that("Estimation robust to heading zeros", {
 
 test_that("Test against simple example", {
     skip_on_cran()
+    skip("REWRITE for changes from 3acfd712232bf36b91f3ec3906e545ced2c2cb6a")
 
     
-    ## ## simulate basic epicurve
-    ## dat <- c(1, 2, 4)
-    ## i <- incidence(dat)
+    ## simulate basic epicurve
+    dat <- c(1, 2, 4)
+    i <- incidence(dat)
 
-    ## ## example with a function for SI
-    ## si <- distcrete("gamma", interval = 1L,
-    ##                 shape = 1.5,
-    ##                 scale = 2, w = 0)
+    ## example with a function for SI
+    si <- distcrete("gamma", interval = 1L,
+                    shape = 1.5,
+                    scale = 2, w = 0)
     
-    ## w <- si$d(0:100)
-    ## w[1] <- 0
-    ## w <- w / sum(w)
+    w <- si$d(0:100)
+    w[1] <- 0
+    w <- w / sum(w)
     
-    ## ## manual computations of expected forces of infection
-    ## expected_lambdas <- c(
-    ##     day_1 = NA,
-    ##     day_2 = w[1 + 1],
-    ##     day_3 = sum(w[1:2 + 1]),
-    ##     day_4 = sum(w[2:3 + 1]),
-    ##     day_5 = sum(w[c(4,3,1) + 1])
-    ## )
+    ## manual computations of expected forces of infection
+    expected_lambdas <- c(
+        day_1 = NA,
+        day_2 = w[1 + 1],
+        day_3 = sum(w[1:2 + 1]),
+        day_4 = sum(w[2:3 + 1]),
+        day_5 = sum(w[c(4,3,1) + 1])
+    )
 
-    ## R_est <- get_R(i, si = si)
-    ## expect_equal_to_reference(R_1, file = "rds/R_1.rds")
+    R_est <- get_R(i, si = si)
+    expect_equal_to_reference(R_1, file = "rds/R_1.rds")
 
-    ## expect_identical(i, R_1$incidence)
+    expect_identical(i, R_1$incidence)
 })
 
 
