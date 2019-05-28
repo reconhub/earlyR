@@ -16,7 +16,7 @@ Imports: stats,
   epitrix,
   ggplot2
 Remotes: 
-  annecori/EpiEstim@new-version
+  annecori/EpiEstim@new-version,
   reconhub/epitrix
 Suggests: testthat,
   vdiffr,
