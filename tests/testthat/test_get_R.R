@@ -43,7 +43,7 @@ test_that("Estimation robust to heading zeros", {
 
 test_that("Test against simple example", {
     skip_on_cran()
-    skip("REWRITE for changes from 3acfd712232bf36b91f3ec3906e545ced2c2cb6a")
+    skip("\n!!! TODO (2019-05-28): REWRITE for changes from 3acfd712232bf36b91f3ec3906e545ced2c2cb6a\n")
 
     
     ## simulate basic epicurve
