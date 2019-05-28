@@ -1,6 +1,14 @@
 language: r
 cache: packages
 
+addons:
+  apt:
+    sources:
+      - sourceline: 'ppa:chris-lea/libsodium'
+    packages:
+      - libsodium-dev
+      - libicu-dev
+
 matrix:
   include:
     - os: linux
@@ -13,8 +21,7 @@ matrix:
       r: oldrel
     - os: osx
       osx_image: xcode8.3
-
-
+  
 r_github_packages:
   - jimhester/covr
 
