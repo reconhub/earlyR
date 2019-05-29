@@ -54,10 +54,14 @@
 
 
 ## Sanitize very low log-likelihood values and put them back on their original
-## scale, summing to 1.
+## scale, summing to 1. We need to consider the max of log-like could be 0.
 
 loglike_to_density <- function(x) {
-  out <- x / abs(max(x, na.rm = TRUE))
+  out <- x
+  x_max <- max(x, na.rm = TRUE)
+  if (x_max != 0) {
+    out <- out / abs(x_max)
+  }
   out <- exp(out)
   out <- out / sum(out)
   out

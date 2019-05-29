@@ -114,6 +114,11 @@ get_R.default <- function(x, ...) {
 get_R.integer <- function(x, disease = NULL, si = NULL,
                           si_mean = NULL, si_sd = NULL,
                           max_R = 10, days = 30, ...) {
+
+  if (sum(x, na.rm = TRUE) == 0) {
+    stop("Cannot estimate R with no cases.")
+  }
+  
   dates <- seq_along(x)
   last_day <- max(dates) + days
 
@@ -167,15 +172,37 @@ get_R.integer <- function(x, disease = NULL, si = NULL,
 
   x_with_tail <- rep(0, last_day)
   x_with_tail[dates] <- x
-  all_lambdas <- EpiEstim::overall_infectivity(x_with_tail, si)[-1]
-  dates_lambdas <- seq_along(all_lambdas) + 1
-  x_lambdas <- all_lambdas[dates]
+
+  
+  ## Important note: we cannot compute the likelihood of the first day with
+  ## case(s), as the force of infection on that day is by default 0: the
+  ## likelihood is in fact conditional on the first day with cases. The
+  ## resulting log-likelihood for the first day with cases will be -Inf. We keep
+  ## track of this day and ignore this data point when summing over
+  ## log-likelihood. In the general case, this will be the first element of x
+  ## (x[1]), but we also implement the general case where the incidence curve
+  ## could have started before the first cases. Note that the force of infection
+  ## for day 1 is also by definition not known (NA), so the first day of data
+  ## (x[1]) is always ignored in any case.
+
+  ignored_likelihood <- 1 # fist day always ignored
+  if (! sum(x_with_tail) == 0) {
+    days_with_cases <- which(x_with_tail > 0)
+    first_day_with_cases <- min(days_with_cases, na.rm = TRUE)
+    ignored_likelihood <- union(1, first_day_with_cases)
+  }
+  
+  all_lambdas <- EpiEstim::overall_infectivity(x_with_tail, si)
+  dates_lambdas <- seq_along(all_lambdas)
+  lambdas_for_x <- all_lambdas[dates]
 
   loglike <- function(R) {
-    if (R <= 0 ) return(-Inf)
-    sum(stats::dpois(x[-1], lambda = R * x_lambdas, log = TRUE))
+    if (R < 0 ) return(-Inf)
+    all_likelihoods <- stats::dpois(x,
+                                    lambda = R * lambdas_for_x,
+                                    log = TRUE)
+    sum(all_likelihoods[-ignored_likelihood])
   }
-
 
   GRID_SIZE <- 1000
 
