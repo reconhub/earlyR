@@ -53,16 +53,12 @@
 
 
 
-## Sanitize very low log-likelihood values and put them back on their original
-## scale, summing to 1. We need to consider the max of log-like could be 0.
+## This function converts log-likelihood values back to their original
+## scales. It also aims to sanitize very low log-likelihood values which will
+## cause numerical approximation problems when converted to the original scale.
 
 loglike_to_density <- function(x) {
-  out <- x
-  x_max <- max(x, na.rm = TRUE)
-  if (x_max != 0) {
-    out <- out / abs(x_max)
-  }
-  out <- exp(out)
-  out <- out / sum(out)
+  out <- exp(x)
+  out <- out / sum(out, na.rm = TRUE)
   out
 }
