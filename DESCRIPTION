@@ -1,10 +1,12 @@
 Package: earlyR
 Title: Estimation of Transmissibility in the Early Stages of a Disease Outbreak
-Version: 0.0.1
+Version: 0.0.3
 Authors@R: c(person("Thibaut", "Jombart", email = "thibautjombart@gmail.com", role = c("aut", "cre")),
     person("Anne", "Cori", email = "a.cori@imperial.ac.uk", role = c("aut")),
     person("Pierre", "Nouvellet", email = "p.nouvellet@imperial.ac.uk", role = c("aut")),
-    person("Janetta", "Skarp", email = "janetta.skarp13@imperial.ac.uk", role = c("aut")))
+    person("Janetta", "Skarp", email = "janetta.skarp13@imperial.ac.uk", role = c("aut")),
+    person("Zhian N.", "Kamvar", email = "zkamvar@gmail.com", role = c("ctb")),
+)
 Description: Implements a simple, likelihood-based estimation of the reproduction number (R0) using a branching process with a Poisson likelihood. This model requires knowledge of the serial interval distribution, and dates of symptom onsets. Infectiousness is determined by weighting R0 by the probability mass function of the serial interval on the corresponding day. It is a simplified version of the model introduced by Cori et al. (2013) <doi:10.1093/aje/kwt133>.
 Depends: R (>= 3.3.0)
 License: MIT + file LICENSE
