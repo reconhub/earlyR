@@ -22,8 +22,8 @@ matrix:
     - os: osx
       osx_image: xcode8.3
   
-r_github_packages:
-  - jimhester/covr
+# r_github_packages:
+#   - jimhester/covr
 
 warnings_are_errors: true
 

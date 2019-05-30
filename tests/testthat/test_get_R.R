@@ -24,7 +24,8 @@ test_that("Estimation robust to heading zeros", {
   dat <- as.Date("2019-01-01") + sample(1:10, 50, replace = TRUE)
   i <- incidence(dat)
   i_early <- incidence(dat,
-                       first_date = as.Date("2018-12-15"))
+                       first_date = as.Date("2018-12-15"),
+                       standard = TRUE)
   ## example with a function for SI
   si <- distcrete("gamma", interval = 1L,
                   shape = 1.5,
@@ -129,6 +130,49 @@ test_that("Errors are thrown when they should", {
 
     expect_error(get_R(c(0,0,0)),
                  "Cannot estimate R with no cases")
+
+})
+
+
+test_that("issue 11 isn't compromised", {
+
+  params <- list(shape = 1.88822148063956, scale = 4.5613778865727)
+  si     <- distcrete::distcrete("gamma", 
+                                 shape = params$shape, 
+                                 scale = params$scale, 
+                                 interval = 1L, w = 0L)
+  i_df <- data.frame(
+         dates = c("2014-04-07", "2014-04-08", "2014-04-09", "2014-04-10",
+                   "2014-04-11", "2014-04-12", "2014-04-13", "2014-04-14",
+                   "2014-04-15", "2014-04-16", "2014-04-17", "2014-04-18", "2014-04-19",
+                   "2014-04-20", "2014-04-21", "2014-04-22", "2014-04-23",
+                   "2014-04-24", "2014-04-25", "2014-04-26", "2014-04-27", "2014-04-28",
+                   "2014-04-29", "2014-04-30", "2014-05-01", "2014-05-02",
+                   "2014-05-03", "2014-05-04", "2014-05-05", "2014-05-06", "2014-05-07",
+                   "2014-05-08", "2014-05-09", "2014-05-10", "2014-05-11",
+                   "2014-05-12", "2014-05-13", "2014-05-14", "2014-05-15", "2014-05-16",
+                   "2014-05-17", "2014-05-18", "2014-05-19", "2014-05-20", "2014-05-21",
+                   "2014-05-22", "2014-05-23", "2014-05-24", "2014-05-25",
+                   "2014-05-26", "2014-05-27", "2014-05-28", "2014-05-29", "2014-05-30",
+                   "2014-05-31", "2014-06-01", "2014-06-02", "2014-06-03",
+                   "2014-06-04", "2014-06-05", "2014-06-06", "2014-06-07", "2014-06-08",
+                   "2014-06-09", "2014-06-10", "2014-06-11", "2014-06-12",
+                   "2014-06-13", "2014-06-14", "2014-06-15", "2014-06-16", "2014-06-17"),
+        counts = c(1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 2L,
+                   0L, 0L, 0L, 1L, 1L, 1L, 0L, 0L, 0L, 2L, 0L, 1L, 1L, 1L, 3L,
+                   2L, 2L, 2L, 1L, 1L, 3L, 3L, 3L, 0L, 2L, 3L, 3L, 3L, 1L, 3L, 1L,
+                   2L, 2L, 3L, 4L, 10L, 1L, 1L, 1L, 2L, 0L, 5L, 3L, 0L, 4L, 5L, 5L,
+                   1L, 5L, 4L, 3L, 1L, 1L, 2L, 5L, 5L, 4L)
+  )
+
+  i_trunc <- as.incidence(i_df[-1], dates = as.Date(i_df$dates))
+  i_trunc
+  the_R <- get_R(i_trunc, si = si)
+  # The estimate should be 1.24
+  expect_identical(round(the_R$R_ml, 2), 1.24)
+
+  # The likelihood surface should pretty much be contained between 0.24 and 2.24
+  expect_equal(sum(with(the_R, R_like[R_grid <= 2.24 & R_grid >= 0.24])), 1)
 
 })
 
