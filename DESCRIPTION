@@ -13,11 +13,10 @@ Encoding: UTF-8
 LazyData: true
 Imports: stats,
   distcrete,
-  EpiEstim,
+  EpiEstim (>= 2.2-1),
   epitrix,
   ggplot2
 Remotes: 
-  annecori/EpiEstim,
   reconhub/epitrix
 Suggests: testthat,
   vdiffr,
