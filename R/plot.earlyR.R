@@ -9,6 +9,8 @@
 #'
 #' @export
 #'
+#' @importFrom ggplot2 .data 
+#'
 #' @rdname plot.earlyR
 #'
 #' @param x A \code{earlyR} object.
@@ -42,8 +44,6 @@
 #' res
 #' plot(res)
 #' plot(res, "lambdas")
-#' plot(res, "lambdas", scaling = 10)
-#' points(onset, 1:4, cex = 3, pch = 20)
 #'
 #' }
                                         #
@@ -57,17 +57,19 @@ plot.earlyR <- function(x, type = c("R", "lambdas"), scale = "ml", ...) {
     R_ml_label <- paste("R (MLE) =", round(x$R_ml, 2))
     
     
-    out <- ggplot2::ggplot(df, ggplot2::aes(x = R, y = likelihood)) +
+    out <- ggplot2::ggplot(df,
+                           ggplot2::aes(x = .data$R,
+                                        y = .data$likelihood)) +
       ggplot2::geom_line(...) +
       ggplot2::geom_segment(data = df_ml,
-                            ggplot2::aes(x = R_ml,
+                            ggplot2::aes(x = .data$R_ml,
                                          0,
-                                         xend = R_ml,
-                                         yend = max_like),
+                                         xend = .data$R_ml,
+                                         yend = .data$max_like),
                             linetype = 2) +
       ggplot2::geom_label(data = df_ml,
-                          ggplot2::aes(x = R_ml,
-                                       y = max_like * 1.05,
+                          ggplot2::aes(x = .data$R_ml,
+                                       y = .data$max_like * 1.05,
                                        label = R_ml_label)) +
       ggplot2::labs(x = "reproduction number (R)",
                     title = "Likelihood distribution of R")
@@ -88,7 +90,9 @@ plot.earlyR <- function(x, type = c("R", "lambdas"), scale = "ml", ...) {
     lambdas <- scale * (x$lambdas / sum(x$lambdas, na.rm = TRUE))
     df_plot <- data.frame(date = x$dates, lambda = lambdas)
 
-    out <- ggplot2::ggplot(df_plot, ggplot2::aes(x = date, y = lambda)) +
+    out <- ggplot2::ggplot(df_plot,
+                           ggplot2::aes(x = .data$date,
+                                        y = .data$lambda)) +
       ggplot2::geom_bar(stat = "identity", ...) +
       ggplot2::labs(title = "Force of infection over time",
                     x = "date",

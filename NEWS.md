@@ -1,9 +1,21 @@
+# earlyR 0.0.4
+
+## New features
+
+- graphs are now using ggplot2
+
+
+
+
 # earlyR 0.0.3
 
 ## Bug fixes
 
 - fix issue #11 where the likelihood surface was incorrectly calculated.
   This unfortunately reverts the issue from #4
+
+
+
 
 # earlyR 0.0.2
 

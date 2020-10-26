@@ -12,8 +12,16 @@ get_R(x, ...)
 
 \method{get_R}{default}(x, ...)
 
-\method{get_R}{integer}(x, disease = NULL, si = NULL, si_mean = NULL,
-  si_sd = NULL, max_R = 10, days = 30, ...)
+\method{get_R}{integer}(
+  x,
+  disease = NULL,
+  si = NULL,
+  si_mean = NULL,
+  si_sd = NULL,
+  max_R = 10,
+  days = 30,
+  ...
+)
 
 \method{get_R}{numeric}(x, ...)
 

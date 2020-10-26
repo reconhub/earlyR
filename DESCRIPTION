@@ -1,6 +1,6 @@
 Package: earlyR
 Title: Estimation of Transmissibility in the Early Stages of a Disease Outbreak
-Version: 0.0.3
+Version: 0.0.4
 Authors@R: c(person("Thibaut", "Jombart", email = "thibautjombart@gmail.com", role = c("aut", "cre")),
     person("Anne", "Cori", email = "a.cori@imperial.ac.uk", role = c("aut")),
     person("Pierre", "Nouvellet", email = "p.nouvellet@imperial.ac.uk", role = c("aut")),
@@ -16,15 +16,12 @@ Imports: stats,
   EpiEstim,
   epitrix,
   ggplot2
-Remotes: 
-  annecori/EpiEstim,
-  reconhub/epitrix
 Suggests: testthat,
   vdiffr,
   roxygen2,
   incidence,
   knitr
-RoxygenNote: 6.1.1
-URL: http://www.repidemicsconsortium.org/earlyR
+RoxygenNote: 7.1.1
+URL: https://www.repidemicsconsortium.org/earlyR/
 BugReports: https://github.com/reconhub/earlyR/issues
 VignetteBuilder: knitr
