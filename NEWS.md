@@ -1,3 +1,10 @@
+# earlyR 0.0.5
+
+## Bug fixes
+
+- fix issues in the README and vignetted due to move to ggplot2
+
+
 # earlyR 0.0.4
 
 ## New features

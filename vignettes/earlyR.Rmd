@@ -1,14 +1,21 @@
 ---
 title: "Early investigation of infectiousness using earlyR"
-author: "Thibaut Jombart"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
+  %\VignetteIndexEntry{Early investigation of infectiousness using earlyR}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{earlyR}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align = "center",
+  fig.width = 7,
+  fig.height = 5
+)
+```
 
 
 In this example we assume a small outbreak of Ebola Virus Disease (EVD), for
@@ -74,23 +81,22 @@ The function `get_R` is then used to estimate the most likely values of *R*:
 ```{r estimate}
 
 library(earlyR)
+library(ggplot2)
 
 res <- get_R(i, si_mean = mu, si_sd = sigma)
 res
 plot(res)
 
-plot(res, "lambdas", scale = length(onset) + 1)
-abline(v = onset, lwd = 3, col = "grey")
-abline(v = today, col = "blue", lty = 2, lwd = 2)
-points(onset, seq_along(onset), pch = 20, cex = 3)
+plot(res, "lambdas", scale = length(onset) + 1) +
+  geom_vline(xintercept = onset, col = "grey", lwd = 1) +
+  geom_vline(xintercept = today, col = "blue", lty = 2, lwd = 1)
 
 ```
 
 The first figure shows the distribution of likely values of *R*, and the
 Maximum-Likelihood (ML) estimation. The second figure shows the global force of
-infection over time, with vertical grey bars indicating the presence of cases,
-and dots showing the dates of symptom of onset. The dashed blue line indicates
-current day.
+infection over time, with vertical grey bars the dates of symptom of onset. 
+The dashed blue line indicates current day.
 
 
 Based on this figure and on the estimated *R*, we can wonder if new cases

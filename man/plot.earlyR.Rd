@@ -5,7 +5,7 @@
 \alias{points.earlyR}
 \title{Plot earlyR objects}
 \usage{
-\method{plot}{earlyR}(x, type = c("R", "lambdas"), scale = "ml", ...)
+\method{plot}{earlyR}(x, type = c("R", "lambdas"), scale = "ml", colour_spectrum = TRUE, ...)
 
 \method{points}{earlyR}(x, scale = 1, ...)
 }
@@ -21,7 +21,10 @@ force of infection.}
 expected over the time period of the lambdas, or a recognised `character`
 string; lambdas will be scaled to correspond to the number of expected
 cases every day; defaults to `ml`, which tells function to use the maximum
-likelihood estimate of *R* multiplied by the number of infectious cases}
+likelihood estimate of *R* multiplied by the number of infectious cases.}
+
+\item{colour_spectrum}{Only applied when plotting "lambdas".  If TRUE a
+continous spectrum of colours from "red" to "yellow" is used for the bars.}
 
 \item{...}{Further arguments to be passed to other methods; for the plot of
 *R*, `...` is passed to `ggplot2::geom_line()`; for the plot of *lambdas*,
@@ -42,8 +45,6 @@ res <- get_R(x, disease = "ebola")
 res
 plot(res)
 plot(res, "lambdas")
-plot(res, "lambdas", scaling = 10)
-points(onset, 1:4, cex = 3, pch = 20)
 
 }
 }

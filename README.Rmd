@@ -1,3 +1,22 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+
+```{r setup, echo = FALSE, message=FALSE, results='hide'}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align = "center",
+  fig.path = "man/figures/README-",
+  echo = TRUE,
+  fig.width = 8,
+  fig.height = 6
+)
+```
+
 
 [![Build Status](https://travis-ci.org/reconhub/earlyR.svg?branch=master)](https://travis-ci.org/reconhub/earlyR)
 [![Build status](https://ci.appveyor.com/api/projects/status/spq4patqkwrtlcgt/branch/master?svg=true)](https://ci.appveyor.com/project/thibautjombart/earlyr/branch/master)
@@ -141,17 +160,18 @@ hist(R_val, border = "grey", col = "navy",
 Finally, we can also represent infectiousness over time using:
 
 ```{r lamdbas}
-plot(res, "lambdas", scale = length(onset) + 1)
-abline(v = onset, lwd = 3, col = "grey")
-abline(v = today, col = "blue", lty = 2, lwd = 2)
-points(onset, seq_along(onset), pch = 20, cex = 3)
+library(ggplot2)
+
+plot(res, "lambdas", scale = length(onset) + 1) +
+  geom_vline(xintercept = onset, col = "grey", lwd = 1) +
+  geom_vline(xintercept = today, col = "blue", lty = 2, lwd = 1)
 
 ```
 
 This figure shows the global force of infection over time, with vertical grey
-bars indicating the presence of cases, and dots showing the dates of symptom of
-onset. The dashed blue line indicates current day. Note that the vertical scale
-for the bars is arbitrary, and only represents the relative force of infection.
+bars the dates of symptom of onset. The dashed blue line indicates current day.
+Note that the vertical scale for the bars is arbitrary, and only represents the
+relative force of infection.
 
 
 

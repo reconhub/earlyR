@@ -9,7 +9,7 @@
 #'
 #' @export
 #'
-#' @importFrom ggplot2 .data 
+#' @importFrom ggplot2 .data
 #'
 #' @rdname plot.earlyR
 #'
@@ -24,7 +24,10 @@
 #'   expected over the time period of the lambdas, or a recognised `character`
 #'   string; lambdas will be scaled to correspond to the number of expected
 #'   cases every day; defaults to `ml`, which tells function to use the maximum
-#'   likelihood estimate of *R* multiplied by the number of infectious cases
+#'   likelihood estimate of *R* multiplied by the number of infectious cases.
+#'
+#' @param colour_spectrum Only applied when plotting "lambdas".  If TRUE a
+#'   continous spectrum of colours from "red" to "yellow" is used for the bars.
 #'
 #' @param ... Further arguments to be passed to other methods; for the plot of
 #'   *R*, `...` is passed to `ggplot2::geom_line()`; for the plot of *lambdas*,
@@ -47,16 +50,17 @@
 #'
 #' }
                                         #
-plot.earlyR <- function(x, type = c("R", "lambdas"), scale = "ml", ...) {
+plot.earlyR <- function(x, type = c("R", "lambdas"), scale = "ml",
+                        colour_spectrum = TRUE, ...) {
 
   type <- match.arg(type)
-  
+
   if (type == "R") {
     df <- data.frame(R = x$R_grid, likelihood = x$R_like)
     df_ml <- data.frame(R_ml = x$R_ml, max_like = max(x$R_like))
     R_ml_label <- paste("R (MLE) =", round(x$R_ml, 2))
-    
-    
+
+
     out <- ggplot2::ggplot(df,
                            ggplot2::aes(x = .data$R,
                                         y = .data$likelihood)) +
@@ -80,7 +84,7 @@ plot.earlyR <- function(x, type = c("R", "lambdas"), scale = "ml", ...) {
     ## the scaling value is defined as the sum of all the lambdas weighted by
     ## individual infectiousness; the default value is "ml", in which case the
     ## scaling value is the ML estimate of R multiplied by the number of cases.
-    
+
     if (tolower(scale) == "ml") {
       scale <- x$R_ml * x$incidence$n
       ylab <- "Force of infection (ML estimate of expected daily cases)"
@@ -90,18 +94,30 @@ plot.earlyR <- function(x, type = c("R", "lambdas"), scale = "ml", ...) {
     lambdas <- scale * (x$lambdas / sum(x$lambdas, na.rm = TRUE))
     df_plot <- data.frame(date = x$dates, lambda = lambdas)
 
-    out <- ggplot2::ggplot(df_plot,
-                           ggplot2::aes(x = .data$date,
-                                        y = .data$lambda)) +
+    if (colour_spectrum) {
+      new_col <- grDevices::colorRampPalette(c("red", "yellow"))(length(lambdas))
+      out <- ggplot2::ggplot(df_plot,
+                             ggplot2::aes(x = .data$date,
+                                          y = .data$lambda,
+                                          fill = new_col)) +
+        ggplot2::scale_fill_manual(values = new_col) +
+        ggplot2::guides(fill = FALSE)
+    } else {
+      out <- ggplot2::ggplot(df_plot,
+                             ggplot2::aes(x = .data$date,
+                                          y = .data$lambda))
+    }
+    out <- out +
+      ggplot2::theme_bw() +
       ggplot2::geom_bar(stat = "identity", ...) +
       ggplot2::labs(title = "Force of infection over time",
                     x = "date",
                     y = ylab)
-        
+
   }
 
   return(out)
-  
+
 }
 
 

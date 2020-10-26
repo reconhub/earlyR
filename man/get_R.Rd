@@ -104,7 +104,6 @@ if (require(incidence)) {
  res <- get_R(x, disease = "ebola")
  res
  plot(res)
- plot(res, "lambdas")
 
 }
 
