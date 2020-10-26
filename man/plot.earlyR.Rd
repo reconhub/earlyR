@@ -42,8 +42,6 @@ res <- get_R(x, disease = "ebola")
 res
 plot(res)
 plot(res, "lambdas")
-plot(res, "lambdas", scaling = 10)
-points(onset, 1:4, cex = 3, pch = 20)
 
 }
 }
