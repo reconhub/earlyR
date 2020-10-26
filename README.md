@@ -166,13 +166,13 @@ values, and then compute statistics on this sample:
 R_val <- sample_R(res, 1000)
 summary(R_val) # basic stats
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>  0.2603  0.9009  1.1211  1.1694  1.4139  2.6126
+#>  0.3103  0.9109  1.1311  1.1600  1.3614  2.6727
 quantile(R_val) # quartiles
 #>        0%       25%       50%       75%      100% 
-#> 0.2602603 0.9009009 1.1211211 1.4139139 2.6126126
+#> 0.3103103 0.9109109 1.1311311 1.3613614 2.6726727
 quantile(R_val, c(0.025, 0.975)) # 95% credibility interval
 #>      2.5%     97.5% 
-#> 0.5402903 1.9622122
+#> 0.5505506 2.0020020
 hist(R_val, border = "grey", col = "navy",
      xlab = "Values of R",
      main = "Sample of likely R values")
