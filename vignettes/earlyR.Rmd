@@ -1,0 +1,184 @@
+---
+title: "Early investigation of infectiousness using earlyR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Early investigation of infectiousness using earlyR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align = "center",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+
+In this example we assume a small outbreak of Ebola Virus Disease (EVD), for
+which the serial interval has been previously characterised. We study a fake
+outbreak, for which we will quantify infectiousness (R), and then project future
+incidence using the package
+[*projections*](https://github.com/reconhub/projections).
+
+The fake data we consider consist of confirmed cases with the
+following symptom onset dates:
+
+```{r data}
+
+onset <- as.Date(c("2017-02-04", "2017-02-12", "2017-02-15",
+                   "2017-02-23", "2017-03-01", "2017-03-01",
+		   "2017-03-02", "2017-03-03", "2017-03-03"))		 
+
+```
+
+We compute the daily incidence using the package
+[*incidence*](https://github.com/reconhub/incidence):
+
+```{r incidence}
+
+library(incidence)
+i <- incidence(onset)
+i
+plot(i, border = "white")
+
+```
+
+Notice that the epicurve stops exactly after the last date of onset. Let us
+assume it is currently the 21th March, and no case has been seen since the 6th
+March. We need to indicate this to `incidence` using:
+
+```{r incidence2}
+
+today <- as.Date("2017-03-21")
+i <- incidence(onset, last_date = today)
+i
+plot(i, border = "white")
+
+```
+
+It is **very important to make sure that the last days without cases are
+included here**. Omitting this information would lead to an over-estimation of the
+reproduction number (*R*).
+
+
+For estimating *R*, we need estimates of the mean and standard deviation of the
+serial interval, i.e. the delay between primary and secondary symptom onset
+dates. This has been quantified durin the West African EVD outbreak (WHO Ebola
+Response Team (2014) NEJM 371:1481–1495):
+
+```{r si}
+
+mu <- 15.3 # mean in days days
+sigma <- 9.3 # standard deviation in days
+
+```
+
+The function `get_R` is then used to estimate the most likely values of *R*:
+```{r estimate}
+
+library(earlyR)
+library(ggplot2)
+
+res <- get_R(i, si_mean = mu, si_sd = sigma)
+res
+plot(res)
+
+plot(res, "lambdas", scale = length(onset) + 1) +
+  geom_vline(xintercept = onset, col = "grey", lwd = 1.5) +
+  geom_vline(xintercept = today, col = "blue", lty = 2, lwd = 1.5)
+
+```
+
+The first figure shows the distribution of likely values of *R*, and the
+Maximum-Likelihood (ML) estimation. The second figure shows the global force of
+infection over time, with vertical grey bars indicating the dates of symptom of
+onset. The dashed blue line indicates current day.
+
+
+Based on this figure and on the estimated *R*, we can wonder if new cases
+will be seen in the near future. How likely is this? We can use the package
+[*projections*](https://github.com/reconhub/projections) to have an idea. The
+function `project` can be used to simulate a large number of future epicurves
+which are in line with the current data, serial interval and *R*. Rather than
+using a single ML estimate of *R* (as we can see, there is some variability in
+the distribution), we use a sample of 1,000 likely *R* values using `sample_R`:
+
+```{r sample_R}
+
+R_val <- sample_R(res, 1000)
+summary(R_val)
+quantile(R_val)
+quantile(R_val, c(0.025, 0.975))
+hist(R_val, border = "grey", col = "navy",
+     xlab = "Values of R",
+     main = "Sample of likely R values")
+
+```
+
+We retrieve the serial interval (SI) from `res`:
+[*distcrete*](https://github.com/reconhub/distcrete).
+ 
+```{r generate_si}
+
+si <- res$si
+si
+
+```
+
+We now use `project` to simulate future epicurves:
+```{r projections}
+
+library(projections)
+
+future_i <- project(i, R = R_val, n_sim = 1000, si = res$si, n_days = 30)
+future_i
+mean(future_i) # average incidence / day
+plot(future_i)
+
+```
+
+The plot shows the median (plain) and 95% credible interval of incidences. Here,
+this means most simulations have no new cases. This is likely due to the fact
+that no case have been seen for the last few days - this would not be compatible
+with ongoing growth of the epidemic. To have the distribution of the total
+number of new cases predicted in the next 30 days, we can use:
+
+```{r pred_size}
+
+predicted_n <- colSums(future_i)
+summary(predicted_n)
+hist(predicted_n, col = "darkred", border = "white",
+     main = "Prediction: new cases in 30 days",
+     xlab = "Total number of new cases")
+
+```
+
+
+Note that without the recent zero incidence, results would be drastically different:
+```{r alternative}
+
+alt_i <- incidence(onset)
+alt_res <- get_R(alt_i, si_mean = mu, si_sd = sigma)
+alt_R_val <- sample_R(alt_res, 1000)
+alt_future_i <- project(alt_i, R = alt_R_val, n_sim = 1000, si = res$si, n_days = 30)
+alt_future_i
+mean(alt_future_i)
+plot(alt_future_i)
+
+## alternative plot
+col <- "#cc66991a"
+matplot(alt_future_i, type = "l", col = col, lty = 1, lwd = 5,
+        xlab = "Day from today",
+	ylab = "Projected daily incidence")
+
+alt_predicted_n <- colSums(alt_future_i)
+summary(alt_predicted_n)
+hist(alt_predicted_n, col = "darkred", border = "white",
+     main = "Prediction: new cases in 30 days",
+     xlab = "Total number of new cases")
+
+```

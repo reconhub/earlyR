@@ -1,8 +1,26 @@
+---
+output: github_document
+---
 
-[![Build Status](https://travis-ci.org/reconhub/earlyR.svg?branch=master)](https://travis-ci.org/reconhub/earlyR)
-[![Build status](https://ci.appveyor.com/api/projects/status/spq4patqkwrtlcgt/branch/master?svg=true)](https://ci.appveyor.com/project/thibautjombart/earlyr/branch/master)
-[![codecov.io](https://codecov.io/github/reconhub/earlyR/coverage.svg?branch=master)](https://codecov.io/github/reconhub/earlyR?branch=master)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/earlyR)](https://cran.r-project.org/package=earlyR)
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, echo = FALSE, message=FALSE, results='hide'}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align = "center",
+  fig.path = "man/figures/README-",
+  echo = TRUE,
+  fig.width = 8,
+  fig.height = 6
+)
+```
+
+<!-- badges: start -->
+[![R build status](https://github.com/reconhub/earlyR/workflows/R-CMD-check/badge.svg)](https://github.com/reconhub/earlyR/actions)
+[![Codecov test coverage](https://codecov.io/gh/reconhub/earlyR/branch/master/graph/badge.svg)](https://codecov.io/gh/reconhub/earlyR?branch=master)
+[![CRAN status](https://www.r-pkg.org/badges/version/earlyR)](https://CRAN.R-project.org/package=earlyR)
+<!-- badges: end -->
 
 # Welcome to the *earlyR* package!
 
@@ -114,6 +132,7 @@ The function `get_R` is then used to estimate the most likely values of *R*:
 ```{r estimate}
 
 library(earlyR)
+library(ggplot2)
 
 res <- get_R(i, si_mean = mu, si_sd = sigma)
 res
@@ -141,17 +160,16 @@ hist(R_val, border = "grey", col = "navy",
 Finally, we can also represent infectiousness over time using:
 
 ```{r lamdbas}
-plot(res, "lambdas", scale = length(onset) + 1)
-abline(v = onset, lwd = 3, col = "grey")
-abline(v = today, col = "blue", lty = 2, lwd = 2)
-points(onset, seq_along(onset), pch = 20, cex = 3)
+plot(res, "lambdas", scale = length(onset) + 1) +
+  geom_vline(xintercept = onset, col = "grey", lwd = 1.5) +
+  geom_vline(xintercept = today, col = "blue", lty = 2, lwd = 1.5)
 
 ```
 
 This figure shows the global force of infection over time, with vertical grey
-bars indicating the presence of cases, and dots showing the dates of symptom of
-onset. The dashed blue line indicates current day. Note that the vertical scale
-for the bars is arbitrary, and only represents the relative force of infection.
+bars indicating the dates of symptom of onset. The dashed blue line indicates
+current day. Note that the vertical scale for the bars is arbitrary, and only
+represents the relative force of infection.
 
 
 
